@@ -7,37 +7,38 @@
 
 <script>
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
       isLoading: true,
       isRouterAlive: true
-    }
+    };
   },
   provide() {
     return {
       reload: this.reload
-    }
+    };
   },
   computed: {
     ENV() {
-      return process.env.VUE_APP_ENV
+      return process.env.VUE_APP_ENV;
     }
   },
   watch: {
-    '$route'(to, from) { // 判断展示router-view 还是 #container
-      this.isLoading = false
+    $route(to, from) {
+      // 判断展示router-view 还是 #container
+      this.isLoading = false;
     }
   },
   methods: {
     reload() {
-      this.isRouterAlive = false
+      this.isRouterAlive = false;
       this.$nextTick(() => {
-        this.isRouterAlive = true
-      })
+        this.isRouterAlive = true;
+      });
     }
   }
-}
+};
 </script>
 <style lang="scss">
 body {

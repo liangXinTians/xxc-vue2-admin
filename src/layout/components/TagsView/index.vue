@@ -47,7 +47,7 @@ export default {
       top: 0,
       left: 0,
       selectedTag: {},
-      affixTags: [],
+      affixTags: []
     };
   },
   computed: {
@@ -56,7 +56,7 @@ export default {
     },
     routes() {
       return this.$store.state.permission.routes;
-    },
+    }
   },
   inject: ["reload"],
   watch: {
@@ -70,7 +70,7 @@ export default {
       } else {
         document.body.removeEventListener("click", this.closeMenu);
       }
-    },
+    }
   },
   mounted() {
     this.initTags();
@@ -85,14 +85,14 @@ export default {
     },
     filterAffixTags(routes, basePath = "/") {
       let tags = [];
-      routes.forEach((route) => {
+      routes.forEach(route => {
         if (route.meta && route.meta.affix) {
           const tagPath = path.resolve(basePath, route.path);
           tags.push({
             fullPath: tagPath,
             path: tagPath,
             name: route.name,
-            meta: { ...route.meta },
+            meta: { ...route.meta }
           });
         }
         if (route.children) {
@@ -166,7 +166,7 @@ export default {
     },
     closeAllTags(view) {
       this.$store.dispatch("tagsView/delAllViews").then(({ visitedViews }) => {
-        if (this.affixTags.some((tag) => tag.path === view.path)) {
+        if (this.affixTags.some(tag => tag.path === view.path)) {
           return;
         }
         this.toLastView(visitedViews, view);
@@ -183,11 +183,7 @@ export default {
           // to reload home page
           this.$router.replace({ path: "/redirect" + view.fullPath });
         } else {
-          if (!window.__POWERED_BY_QIANKUN__) {
-            location.reload();
-          } else {
-            window.location.href = "/xxc-qiankun/";
-          }
+          location.reload();
         }
       }
     },
@@ -210,8 +206,8 @@ export default {
     },
     closeMenu() {
       this.visible = false;
-    },
-  },
+    }
+  }
 };
 </script>
 

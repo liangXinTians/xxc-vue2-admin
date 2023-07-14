@@ -22,7 +22,7 @@ import pathToRegexp from "path-to-regexp";
 export default {
   data() {
     return {
-      levelList: null,
+      levelList: null
     };
   },
   watch: {
@@ -32,7 +32,7 @@ export default {
         return;
       }
       this.getBreadcrumb();
-    },
+    }
   },
   created() {
     this.getBreadcrumb();
@@ -41,7 +41,7 @@ export default {
     getBreadcrumb() {
       // only show routes with meta.title
       let matched = this.$route.matched.filter(
-        (item) => item.meta && item.meta.title
+        item => item.meta && item.meta.title
       );
       const first = matched[0];
 
@@ -50,7 +50,7 @@ export default {
       }
 
       this.levelList = matched.filter(
-        (item) => item.meta && item.meta.title && item.meta.breadcrumb !== false
+        item => item.meta && item.meta.title && item.meta.breadcrumb !== false
       );
     },
     isDashboard(route) {
@@ -79,13 +79,9 @@ export default {
       }else{
         this.$router.push(this.pathCompile(path))
       } */
-      if (!window.__POWERED_BY_QIANKUN__) {
-        this.$router.push({ path: "/" });
-      } else {
-        window.location.href = "/xxc-qiankun/";
-      }
-    },
-  },
+      this.$router.push({ path: "/" });
+    }
+  }
 };
 </script>
 

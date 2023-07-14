@@ -44,12 +44,12 @@ export default {
       user: {
         oldPassword: undefined,
         newPassword: undefined,
-        confirmPassword: undefined,
+        confirmPassword: undefined
       },
       // 表单校验
       rules: {
         oldPassword: [
-          { required: true, message: "旧密码不能为空", trigger: "blur" },
+          { required: true, message: "旧密码不能为空", trigger: "blur" }
         ],
         newPassword: [
           { required: true, message: "新密码不能为空", trigger: "blur" },
@@ -57,33 +57,29 @@ export default {
             min: 6,
             max: 20,
             message: "长度在 6 到 20 个字符",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         confirmPassword: [
           { required: true, message: "确认密码不能为空", trigger: "blur" },
-          { required: true, validator: equalToPassword, trigger: "blur" },
-        ],
-      },
+          { required: true, validator: equalToPassword, trigger: "blur" }
+        ]
+      }
     };
   },
   methods: {
     submit() {
-      this.$refs["form"].validate((valid) => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
           updateUserPwd(
             this.user.oldPassword,
             this.user.newPassword,
             this.$store.state.user.userId
-          ).then((response) => {
+          ).then(response => {
             if (response.code === 200) {
               this.$message.success("修改密码成功");
               this.$store.dispatch("FedLogOut").then(() => {
-                if (!window.__POWERED_BY_QIANKUN__) {
-                  location.reload();
-                } else {
-                  window.location.href = "/xxc-qiankun/";
-                }
+                location.reload();
               });
             } else {
               this.$message.error(response.msg);
@@ -96,12 +92,12 @@ export default {
       this.user = {
         oldPassword: undefined,
         newPassword: undefined,
-        confirmPassword: undefined,
+        confirmPassword: undefined
       };
     },
     close() {
       this.$emit("close");
-    },
-  },
+    }
+  }
 };
 </script>

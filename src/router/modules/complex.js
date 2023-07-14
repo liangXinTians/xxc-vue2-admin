@@ -1,13 +1,13 @@
-/** 地图 路由 **/
+/** 路由 **/
 
 import Layout from "@/layout";
 /* 定义component */
-const Test = () => import("@/views/demo/test");
+const Example = () => import("@/views/demo/test");
 
 const complexRouter = {
   path: "/complex",
   component: Layout,
-  redirect: "/complex/test",
+  redirect: "/complex/example",
   name: "组合案例",
   meta: {
     title: "组合案例",
@@ -15,9 +15,15 @@ const complexRouter = {
   },
   children: [
     {
-      path: "test",
-      name: "test",
-      component: Test,
+      path: "example",
+      name: "example",
+      component: Example,
+      meta: { title: "第1个页面" }
+    },
+    {
+      path: "example2",
+      name: "example2",
+      component: Example,
       meta: { title: "第二个页面" }
     }
   ]

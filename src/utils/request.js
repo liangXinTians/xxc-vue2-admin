@@ -56,12 +56,8 @@ export default function (config) {
           }
         ).then(() => {
           store.dispatch("FedLogOut").then(() => {
-            if (!window.__POWERED_BY_QIANKUN__) {
               // 为了重新实例化vue-router对象 避免bug
               location.reload();
-            } else {
-              window.location.href = "/xxc-qiankun/";
-            }
           });
         });
       } else if (code !== 200) {

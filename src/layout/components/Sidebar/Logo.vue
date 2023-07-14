@@ -25,22 +25,20 @@ export default {
   props: {
     collapse: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
       title: packageTitle,
-      logo: require("@/assets/logo/logo.png"),
+      logo: require("@/assets/logo/logo.png")
     };
   },
   methods: {
     goIndex() {
-      window.location.href = window.__POWERED_BY_QIANKUN__
-        ? "/xxc-qiankun/"
-        : "/xxc-vue2/";
-    },
-  },
+      window.location.href = "/xxc-vue2/";
+    }
+  }
 };
 </script>
 

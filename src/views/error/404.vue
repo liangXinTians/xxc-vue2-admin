@@ -43,17 +43,13 @@ export default {
   computed: {
     message() {
       return "找不到网页！";
-    },
+    }
   },
   methods: {
     goHome() {
-      if (!window.__POWERED_BY_QIANKUN__) {
-        this.$router.push({ path: "/" });
-      } else {
-        window.location.href = "/xxc-qiankun/";
-      }
-    },
-  },
+      this.$router.push({ path: "/" });
+    }
+  }
 };
 </script>
 

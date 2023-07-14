@@ -85,9 +85,7 @@ export default {
         type: "warning"
       }).then(() => {
         this.$store.dispatch("FedLogOut").then(() => {
-          window.location.href = window.__POWERED_BY_QIANKUN__
-            ? "/xxc-qiankun/"
-            : "/xxc-vue2/";
+          window.location.href = "/xxc-vue2/";
         });
       });
     }
