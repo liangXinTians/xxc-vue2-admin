@@ -66,4 +66,8 @@ body {
     font-size: 12px;
   }
 }
+
+.navbar{
+  padding-left: 15px;
+}
 </style>
