@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    test 页面
+    tes
   </div>
 </template>
 

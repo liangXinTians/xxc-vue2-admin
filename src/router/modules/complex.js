@@ -2,29 +2,38 @@
 
 import Layout from "@/layout";
 /* 定义component */
-const Example = () => import("@/views/demo/test");
+// const Example = () => import("@/views/demo/test");
+const Link = () => import("@/views/Two/link");
+const Manage = () => import("@/views/Two/manage");
+const Serve = () => import("@/views/Two/serve");
 
 const complexRouter = {
   path: "/complex",
   component: Layout,
   redirect: "/complex/example",
-  name: "组合案例",
+  name: "内容管理",
   meta: {
-    title: "组合案例",
+    title: "内容管理",
     icon: "skill"
   },
   children: [
     {
       path: "example",
       name: "example",
-      component: Example,
-      meta: { title: "第1个页面" }
+      component:Manage ,
+      meta: { title: "文章管理" }
     },
     {
       path: "example2",
       name: "example2",
-      component: Example,
-      meta: { title: "第二个页面" }
+      component: Link,
+      meta: { title: "友情链接" }
+    },
+    {
+      path: "example3",
+      name: "example3",
+      component: Serve,
+      meta: { title: "服务条目" }
     }
   ]
 };
