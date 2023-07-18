@@ -18,6 +18,7 @@ import router from "./router";
 import api from "./api"; // 接口api
 import moment from "moment";
 import print from "vue-print-nb";
+import * as echarts from "echarts";
 
 Vue.use(print); //注册打印插件
 Vue.use(VueClipboard);
@@ -30,6 +31,7 @@ Vue.prototype.moment = moment;
 Vue.prototype.$messageUpload = message; // 防止重复点击重复弹出message弹框
 Vue.prototype.download = download; // 导出
 Vue.prototype.$api = api;
+Vue.prototype.$echarts = echarts;
 
 Vue.use(permission); // 按钮权限指令
 

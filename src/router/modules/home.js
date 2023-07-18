@@ -9,9 +9,9 @@ const mapRouter = {
   path: "/",
   component: Layout,
   redirect: "/home",
-  name: "工作台",
+  name: "首页",
   meta: {
-    title: "工作台",
+    title: "首页",
     icon: "dict"
   },
   children: [
@@ -20,12 +20,6 @@ const mapRouter = {
       name: "首页",
       component: home,
       meta: { title: "首页" }
-    },
-    {
-      path: "test",
-      name: "test",
-      component: test,
-      meta: { title: "test页面" }
     }
   ]
 };
