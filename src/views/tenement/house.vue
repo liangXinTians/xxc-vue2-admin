@@ -1,5 +1,4 @@
 ﻿<template>
-  <div class="app-main">
     <div class="app-container">
       <!-- 搜索条 -->
       <div class="nav">
@@ -81,26 +80,39 @@
         :header-cell-style="rowClass"
         :row-style="{ height: '45px' }"
       >
-        <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column label="#" width="50">1</el-table-column>
-        <el-table-column prop="type" width="60" label="类型">
+        <el-table-column type="selection" width="55px"> </el-table-column>
+        <el-table-column label="#" type="index" width="50px"></el-table-column>
+        <el-table-column
+          prop="type"
+          width="60px"
+          label="类型"
+          v-if="!this.hiddenList.includes('type')"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.type === 0 ? "整租" : "合租" }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          width="120"
+          width="120px"
           prop="houseCode"
           label="户型"
+          v-if="!this.hiddenList.includes('houseCode')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          width="80"
+          width="80px"
           prop="houseArea"
           label="整套面积"
+          v-if="!this.hiddenList.includes('houseArea')"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column prop="roomType" label="出租房间" show-overflow-tooltip>
+        <el-table-column
+          prop="roomType"
+          label="出租房间"
+          width="80px"
+          v-if="!this.hiddenList.includes('roomType')"
+          show-overflow-tooltip
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.roomType === 1 ? "主卧" : "" }}</span>
           </template>
@@ -108,37 +120,43 @@
         <el-table-column
           prop="roomArea"
           label="房屋面积"
-          width="80"
+          width="80px"
+          v-if="!this.hiddenList.includes('roomArea')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="direction"
           label="朝向"
-          width="60"
+          width="60px"
+          v-if="!this.hiddenList.includes('direction')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="decoration"
           label="装修"
-          width="80"
+          width="80px"
+          v-if="!this.hiddenList.includes('decoration')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="price"
           label="租金"
-          width="60"
+          width="60px"
+          v-if="!this.hiddenList.includes('price')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="startDate"
           label="起租日期"
-          width="100"
+          width="100px"
+          v-if="!this.hiddenList.includes('startDate')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="state"
           label="状态"
-          width="60"
+          width="60px"
+          v-if="!this.hiddenList.includes('state')"
           show-overflow-tooltip
         >
           <template slot-scope="scope">
@@ -148,7 +166,8 @@
         <el-table-column
           prop="faceUrl"
           label="封面图"
-          width="80"
+          width="80px"
+          v-if="!this.hiddenList.includes('faceUrl')"
           show-overflow-tooltip
         >
           <template slot-scope="scope">
@@ -173,58 +192,67 @@
         <el-table-column
           prop="villageName"
           label="小区名称"
-          width="178"
+          width="178px"
+          v-if="!this.hiddenList.includes('villageName')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="houseNo"
           label="房牌号"
-          width="100"
+          width="100px"
+          v-if="!this.hiddenList.includes('houseNo')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="roomCode"
           label="门牌号"
-          width="80"
+          width="80px"
+          v-if="!this.hiddenList.includes('roomCode')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="code"
           label="房源代号"
-          width="90"
+          width="100px"
+          v-if="!this.hiddenList.includes('code')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="ownerName"
           label="房东姓名"
-          width="90"
+          width="90px"
+          v-if="!this.hiddenList.includes('ownerName')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="owerPhone"
           label="房东电话"
-          width="120"
+          width="120px"
+          v-if="!this.hiddenList.includes('owerPhone')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="agentName"
           label="经纪人"
-          width="60"
+          width="60px"
+          v-if="!this.hiddenList.includes('agentName')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
           prop="agentPhone"
           label="经纪人电话"
-          width="100"
+          width="100px"
+          v-if="!this.hiddenList.includes('agentPhone')"
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column
-          prop="1"
+          prop="remark"
           label="备注"
-          width="100"
+          width="100px"
+          v-if="!this.hiddenList.includes('ramark')"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column fixed="right" label="操作" width="120" z-index="10">
+        <el-table-column fixed="right" label="操作" width="120" z-index="1000">
           <template slot-scope="scope"> </template>
         </el-table-column>
       </el-table>
@@ -237,7 +265,7 @@
         :page-sizes="[20, 50, 100, 200]"
         :page-size="20"
         layout="->,total, sizes, prev, pager, next, jumper"
-        :total="8"
+        :total="this.houseList.length"
       >
       </el-pagination>
       <!-- 搜索弹框 -->
@@ -339,10 +367,12 @@
       </el-drawer>
       <!-- 穿梭框 -->
       <el-dialog
+        v-dialogDrag
         title="显示/隐藏"
         :visible.sync="dialogShowHidden"
         width="540px"
         custom-class="dialog-transfer"
+        close-on-click-modal
       >
         <el-transfer
           v-model="hiddenList"
@@ -352,11 +382,11 @@
         ></el-transfer>
       </el-dialog>
     </div>
-  </div>
 </template>
 
 <script>
 import { getHouseRoomList } from "@/api/tenement.js";
+import dialogDrag from "@/directive/modules/dialogDrag.js";
 export default {
   name: "",
   props: [],
@@ -364,34 +394,35 @@ export default {
     // 穿梭框
     const generateData = _ => {
       const data = [];
-      const houseProperty = [
-        "类型",
-        "户型",
-        "整套面积",
-        "出租面积",
-        "房屋面积",
-        "朝向",
-        "装修",
-        "租金",
-        "起租日期",
-        "状态",
-        "封面图",
-        "小区名称",
-        "房牌号",
-        "门牌号",
-        "房源代号",
-        "房东姓名",
-        "房东电话",
-        "经纪人",
-        "经纪人电话",
-        "备注"
-      ];
-      houseProperty.forEach((city, index) => {
+      // 遍历列表全部属性并添加到data数组
+      const houseProperty = {
+        type: "类型",
+        houseCode: "户型",
+        houseArea: "整套面积",
+        roomType: "出租房间",
+        roomArea: "房屋面积",
+        direction: "朝向",
+        decoration: "装修",
+        price: "租金",
+        startDate: "起租日期",
+        state: "状态",
+        faceUrl: "封面图",
+        villageName: "小区名称",
+        houseNo: "房牌号",
+        roomCode: "门牌号",
+        code: "房源代号",
+        ownerName: "房东姓名",
+        owerPhone: "房东电话",
+        agentName: "经纪人",
+        agentPhone: "经纪人电话",
+        ramark: "备注"
+      };
+      for (let key in houseProperty) {
         data.push({
-          key: city,
-          label: city
+          key: key,
+          label: houseProperty[key]
         });
-      });
+      }
       return data;
     };
     return {
@@ -484,8 +515,11 @@ export default {
     },
     // 清除表单内容
     onClear() {
-      this.house.type = "";
-      this.house.state = "";
+      Object.keys(this.house).forEach(key => {
+        this.house[key] = "";
+      });
+      // this.house.type = "";
+      // this.house.state = "";
       // 搜索弹框重置
       this.resetForm("form");
       // 发送请求重新获取列表
@@ -499,8 +533,12 @@ export default {
     },
     // 穿梭框值变化
     handleChange(value, direction, movedKeys) {
-        console.log(value, direction, movedKeys);
-      },
+      this.hiddenList=[]
+      value.forEach(item => {
+        this.hiddenList.push(item)
+      });
+    },
+    
     // 修改页面条数
     handleSizeChange(val) {
       this.pageSize = val;
@@ -509,6 +547,7 @@ export default {
     // 修改页面数
     handleCurrentChange(val) {
       this.pageNum = val;
+      this.getHouseList();
     },
     // 多选列表
     handleSelectionChange(val) {
@@ -538,6 +577,9 @@ export default {
         }
       };
     }
+  },
+  directives: {
+    dialogDrag
   }
 };
 </script>
