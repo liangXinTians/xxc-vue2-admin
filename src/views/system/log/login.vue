@@ -10,20 +10,14 @@
           class="demo-form-inline"
           size="mini"
         >
-          <el-form-item label="类型">
-            <el-select v-model="formInline.businessType" placeholder="操作类型">
-              <el-option label="新增" value="1"></el-option>
-              <el-option label="修改" value="2"></el-option>
-              <el-option label="删除" value="3"></el-option>
-              <el-option label="授权" value="4"></el-option>
-              <el-option label="导出" value="5"></el-option>
-              <el-option label="导入" value="6"></el-option>
-              <el-option label="强退" value="7"></el-option>
-              <el-option label="生成代码" value="8"></el-option>
-              <el-option label="清空数据" value="9"></el-option>
-            </el-select>
+          <el-form-item label="用户名称">
+            <el-input
+              v-model="formInline.userName"
+              placeholder="请输入用户名称"
+            >
+            </el-input>
           </el-form-item>
-          <el-form-item label="操作时间">
+          <el-form-item label="登录时间">
             <el-date-picker
               v-model="formInline.time"
               type="daterange"
@@ -53,47 +47,34 @@
         ref="multipleTable"
         :data="tableData"
         tooltip-effect="dark"
-        style="width: 100%;height:100%"
+        style="width: 100%;"
         @selection-change="handleSelectionChange"
         size="mini"
         :default-sort="{ prop: 'date', order: 'descending' }"
         height="560"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
-        <el-table-column prop="operId" label="日志编号" width="120">
+        <el-table-column prop="infoId" label="访问编号" width="100">
         </el-table-column>
-        <el-table-column prop="title" label="分类管理" width="120">
+        <el-table-column prop="userName" label="用户名称" width="100" sortable>
         </el-table-column>
-        <el-table-column
-          prop="businessType"
-          label="操作类型"
-          :filters="[
-            { text: '家', value: '家' },
-            { text: '公司', value: '公司' }
-          ]"
-          :filter-method="filterTag"
-        >
-          <template slot-scope="scope"
-            ><el-tag
-              :type="scope.row.businessType === '家' ? 'primary' : 'success'"
-              disable-transitions
-              >{{ scope.row.businessType }}</el-tag
-            ></template
-          >
+        <el-table-column prop="ipaddr" label="登录地址"> </el-table-column>
+        <el-table-column prop="loginLocation" label="登录地点">
         </el-table-column>
-        <el-table-column prop="requestMethod" label="请求方式">
+        <el-table-column prop="browser" label="浏览器"> </el-table-column>
+        <el-table-column prop="os" label="操作系统"> </el-table-column>
+        <el-table-column prop="status" label="登录状态" width="70"
+          ><template slot-scope="scope">
+            <el-tag :type="scope.row.status == 0 ? '' : 'danger'" size="mini">{{
+              scope.row.status == 0 ? "成功" : "失败"
+            }}</el-tag>
+          </template>
         </el-table-column>
-        <el-table-column prop="operName" label="操作人员" sortable>
+        <el-table-column prop="msg" label="操作信息"> </el-table-column>
+        <el-table-column prop="loginTime" label="登录日期" sortable>
         </el-table-column>
-        <el-table-column prop="operIp" label="操作地址"> </el-table-column>
-        <el-table-column prop="operLocation" label="操作地点">
-        </el-table-column>
-        <el-table-column prop="status" label="操作状态"> </el-table-column>
-        <el-table-column prop="operTime" label="操作日期" sortable>
-        </el-table-column>
-        <el-table-column prop="" label="操作"> </el-table-column>
       </el-table>
-      <div class="block">
+      <div class="block" style="color:rgb(96, 98, 102)">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -102,6 +83,7 @@
           :page-size="cur"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+          style="color:rgb(96, 98, 102);font-size 13px;font-weight 700"
         >
         </el-pagination>
       </div>
@@ -110,12 +92,12 @@
 </template>
 
 <script>
-import { getAipOperation } from "../../../../api/system";
+import { getAipLogin } from "@/api/system";
 export default {
   data() {
     return {
       formInline: {
-        businessType: "", //操作类型
+        userName: "", //操作类型
         time: "" //状态搜索
       },
       tableData: [], //表单总数据
@@ -125,18 +107,18 @@ export default {
       cur: 20 //每页数据条数
     };
   },
-  mounted() {
-    this.getOperation();
+  created() {
+    this.getLogin();
   },
-
+  mounted() {},
   methods: {
     //获取列表数据
-    getOperation() {
+    getLogin() {
       const params = {
         pageNum: this.currentPage,
         pageSize: this.cur
       };
-      getAipOperation(params).then(res => {
+      getAipLogin(params).then(res => {
         this.total = res.total;
         this.tableData = res.rows;
       });
@@ -148,20 +130,20 @@ export default {
       const params = {
         pageNum: this.currentPage,
         pageSize: this.cur,
-        businessType: this.formInline.businessType,
+        userName: this.formInline.userName,
         beginTime: time1,
         endTime: time2
       };
-      getAipOperation(params).then(res => {
+      getAipLogin(params).then(res => {
         this.total = res.total;
         this.tableData = res.rows;
       });
     },
     // 重置
     reset() {
-      this.formInline.businessType = "";
+      this.formInline.userName = "";
       this.formInline.time = "";
-      this.getOperation();
+      this.getLogin();
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -173,7 +155,7 @@ export default {
         pageNum: this.currentPage,
         pageSize: this.cur
       };
-      getAipOperation(params).then(res => {
+      getAipLogin(params).then(res => {
         this.total = res.total;
         this.tableData = res.rows;
       });
@@ -185,7 +167,7 @@ export default {
         pageNum: this.currentPage,
         pageSize: this.cur
       };
-      getAipOperation(params).then(res => {
+      getAipLogin(params).then(res => {
         this.total = res.total;
         this.tableData = res.rows;
       });
@@ -197,9 +179,6 @@ export default {
       let m = a.getMonth() + 1;
       let d = a.getDate();
       return y + "-" + m + "-" + d;
-    },
-    filterTag(value, row) {
-      console.log(value, row);
     }
   }
 };

@@ -125,9 +125,10 @@ export default {
       cur: 20 //每页数据条数
     };
   },
-  mounted() {
+  created() {
     this.gitInform();
   },
+  mounted() {},
   methods: {
     //列表数据
     gitInform() {

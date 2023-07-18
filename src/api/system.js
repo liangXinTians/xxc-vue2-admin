@@ -20,5 +20,12 @@ function getAipOperation(data) {
     params: data
   });
 }
+function getAipLogin(data) {
+  return request({
+    url: "/web-api/monitor/logininfor/list",
+    method: "GET",
+    params: data
+  });
+}
 
-export { getApiDepartment, getAipInform, getAipOperation };
+export { getApiDepartment, getAipInform, getAipOperation,getAipLogin };

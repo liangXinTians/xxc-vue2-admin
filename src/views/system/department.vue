@@ -47,15 +47,14 @@
       <el-table
         :data="tableData"
         style="width: 100%;margin-bottom: 20px;"
-        row-key="parentId"
+        row-key="deptId"
         :default-expand-all="fold"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         size="mini"
       >
         <el-table-column prop="deptName" label="部门名称" width="400">
         </el-table-column>
-        <el-table-column prop="orderNum" label="排序" >
-        </el-table-column>
+        <el-table-column prop="orderNum" label="排序"> </el-table-column>
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
             <el-tag size="mini">{{
@@ -63,7 +62,8 @@
             }}</el-tag>
           </template></el-table-column
         >
-        <el-table-column prop="createTime" label="创建时间" width="180"> </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" width="180">
+        </el-table-column>
         <el-table-column prop="" label="操作"> </el-table-column>
       </el-table>
     </div>
@@ -81,13 +81,16 @@ export default {
       },
       fold: true, //折叠
       tableData: [], //例表数据
-      tableData2: [] //搜索过滤
+      tableData2: [], //搜索过滤
+      loading: true, // 遮罩层
+      open: true,
+      close: false
     };
   },
-  created() {},
-  mounted() {
+  created() {
     this.getDepartment();
   },
+  mounted() {},
   methods: {
     //列表数据
     getDepartment() {
@@ -100,17 +103,46 @@ export default {
         let tab2 = this.tableData[0].children.slice(1);
         this.tableData[0].children.splice(1);
         this.tableData[0].children[0].children.push(...tab2);
-        console.log("res:", res, "tab:", this.tableData);
       });
     },
     //折叠
     onFold() {
-      this.fold = !this.fold;
+      let els = document.getElementsByClassName("el-table__expand-icon");
+      if (this.tableData.length != 0 && els.length != 0) {
+        for (let j1 = 0; j1 < els.length; j1++) {
+          els[j1].classList.add("dafult");
+        }
+        if (
+          this.$el.getElementsByClassName("el-table__expand-icon--expanded")
+        ) {
+          const open = this.$el.getElementsByClassName(
+            "el-table__expand-icon--expanded"
+          );
+          for (let j = 0; j < open.length; j++) {
+            open[j].classList.remove("dafult");
+          }
+          const dafult = this.$el.getElementsByClassName("dafult");
+          for (let a = 0; a < dafult.length; a++) {
+            dafult[a].click();
+          }
+        }
+      }
+      if (this.tableData.length != 0) {
+        const elsopen = this.$el.getElementsByClassName(
+          "el-table__expand-icon--expanded"
+        );
+        if (
+          this.$el.getElementsByClassName("el-table__expand-icon--expanded")
+        ) {
+          for (let i = 0; i < elsopen.length; i++) {
+            elsopen[i].click();
+          }
+        }
+      }
     },
     //搜索按钮
     onSubmit() {
       let params = this.formInline;
-      console.log(params);
       getApiDepartment(params).then(res => {
         this.tableData = res.data;
       });
@@ -120,9 +152,7 @@ export default {
       this.formInline.deptName = "";
       this.formInline.status = "";
       this.getDepartment();
-    },
-
-    load(tree, treeNode, resolve) {}
+    }
   }
 };
 </script>

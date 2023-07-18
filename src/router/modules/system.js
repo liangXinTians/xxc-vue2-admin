@@ -3,10 +3,10 @@
 import Layout from "@/layout";
 import Blank from "@/components/Blank";
 /* 定义component */
-const department = () => import("@/views/demo/system/department");
-const inform = () => import("@/views/demo/system/inform");
-const operation = () => import("@/views/demo/system/log/operation");
-const login = () => import("@/views/demo/system/log/login");
+const department = () => import("@/views/system/department");
+const inform = () => import("@/views/system/inform");
+const operation = () => import("@/views/system/log/operation");
+const login = () => import("@/views/system/log/login");
 
 const mapRouter = {
   path: "/system",
