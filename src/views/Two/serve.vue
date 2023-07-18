@@ -18,25 +18,23 @@
                 placeholder="请选择类型"
                 class="input"
               >
-                <el-option label="整租" value="0"></el-option>
-                <el-option label="合租" value="1"></el-option>
+                <el-option
+                  v-for="item in typeList"
+                  :key="item.value"
+                  :label="item.title"
+                  :value="item.type"
+                 >
+                </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="状态">
-              <el-select
+            <el-form-item label="标题">
+              <el-input
                 v-model="house.state"
-                clearable
-                placeholder="请选择状态"
-                class="input"
-              >
-                <el-option label="待审核" value="0"></el-option>
-                <el-option label="待出租" value="1"></el-option>
-                <el-option label="已出租" value="2"></el-option>
-                <el-option label="已下架" value="3"></el-option>
-              </el-select>
+                placeholder="请输入标题"
+              ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" icon="el-icon-search" @click="onSubmit"
+              <el-button type="primary" icon="el-icon-search" @click="onSubmit(state)"
                 >搜索</el-button
               >
               <el-button icon="el-icon-refresh" @click="onClear">重置</el-button>
@@ -64,6 +62,7 @@
             style="width: 100%"
             
             v-loading="loading"
+            
           >
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column
@@ -77,25 +76,36 @@
               class=".el-table"
               prop="type"
               label="类别"
-              width="180"
+              width="150"
+              
             ></el-table-column>
             <el-table-column
-              class=".el-table"
+              class=".el-table juzhong"
               prop="title"
               label="标题"
-              width="100"
+              width="717"
+              header-align="center"
+              
             ></el-table-column>
+
+            
             <el-table-column
               class=".el-table"
               prop="state"
               label="状态"
               width="100"
-            ></el-table-column>
+            ><el-tag v-if="state=1" color="#e8f4ff" size="mini">
+              正常
+            </el-tag>
+            <el-tag v-if="state=0" color="#e8f4ff" size="mini">
+              异常
+            </el-tag>
+          </el-table-column>
             <el-table-column
               class=".el-table"
               prop="remark"
               label="备注"
-              width="80"
+              width="300"
             ></el-table-column>
             <el-table-column prop="articleType" label="操作"> </el-table-column>
           </el-table>
@@ -128,7 +138,7 @@
 </template>
 
 <script>
-import {getServeList} from '../../api/two'
+import {getServeList,getServeType} from '../../api/two'
 export default {
   data() {
     return {
@@ -144,10 +154,13 @@ export default {
       loading:false,       //加载小圆圈
       currentPage: 1, //初始页
       pagesize: 5, //    每页的数据
+      typeList:[],    //类型信息
+      ArrState:[]
     };
   },
   mounted(){
-    this.getServe()
+    this.getServe(),
+    this.getType()
   },
   methods:{
     // 获取表单内容数据
@@ -160,14 +173,79 @@ export default {
             
         });
     },
-    // 表单提交
-    onSubmit() {
-      console.log(this.house.type, this.house.state);
+    // 获取类别接口信息
+    getType(){
+      getServeList().then(res=>{
+        console.log(res)
+        this.typeList=res.rows
+        console.log(this.typeList)
+      })
     },
-    // 清除表单内容
-    onClear(){
-      this.house.type=''
-      this.house.state=''
+   // 模糊查询
+   onSubmit() {
+      
+      console.log(this.house.type)
+      console.log(this.house.state)
+      console.log("submit!");
+      if(this.house.state!=""&&this.house.type!=''){
+        setTimeout(() => {
+          this.linkList.forEach((item)=>{
+            // console.log(item)
+            if(item.title.indexOf(this.house.state)>-1|item.type.indexOf(this.house.type)>-1){
+              console.log(item)
+              console.log(1)
+              this.ArrState.push(item)
+              this.linkList=this.ArrState
+            }
+            // else{
+            //   this.tableData=[]
+            // }
+          })
+         this.house.state=''
+        },);
+      }
+      else if(this.house.state!=""){
+        setTimeout(() => {
+          this.linkList.forEach((item)=>{
+            // console.log(item)
+            if(item.title.indexOf(this.house.state)>-1){
+              console.log(item)
+              console.log(2)
+              this.ArrState.push(item)
+              this.linkList=this.ArrState
+            }
+            // else{
+            //   this.tableData=[]
+            // }
+          })
+         this.house.state=''
+        },);
+      }
+      else if(this.house.type!=""){
+        console.log(3)
+        
+          this.linkList.forEach((item)=>{
+            // console.log(item)
+            if(item.type.indexOf(this.house.type)>-1){
+              console.log(item)
+              console.log(3)
+              this.ArrState.push(item)
+              console.log(this.ArrState)
+              this.linkList=this.ArrState
+            }
+            // else{
+            //   this.tableData=[]
+            // }
+          })
+        
+        if(this.ArrState.length==0){
+            console.log(4)
+            this.linkList=[]
+          }
+      }
+      else{
+        this.linkList=[]
+      }
     },
     toggleSelection(rows) {
       if (rows) {
@@ -192,11 +270,11 @@ export default {
     // 刷新页面
     refreshData() {
       // location.reload();
-      
+      this.ArrState=[]
       setTimeout(() => {
         this.loading=true;
         setTimeout(() => {
-          this.getLink()
+          this.getServe()
           this.loading=false
         }, 500);
       }, 500);
@@ -296,4 +374,5 @@ export default {
     }
   }
 }
+
 </style>

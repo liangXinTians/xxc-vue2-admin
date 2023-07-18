@@ -33,7 +33,7 @@
                 </el-form-item>
                 <el-form-item label="标题">
                   <el-input
-                  v-model="state"
+                  v-model="house.state"
                   
                   placeholder="请输入内容"
                   :trigger-on-focus="false"
@@ -44,7 +44,7 @@
                   <el-button
                     type="primary"
                     icon="el-icon-search"
-                    @click="onSubmit(state)"
+                    @click="onSubmit"
 
                     >搜索</el-button
                   >
@@ -111,6 +111,8 @@
               prop="bigTitle"
               label="简介"
               width="586"
+              header-align="center"
+              
             ></el-table-column>
             <el-table-column
               class=".el-table"
@@ -122,7 +124,7 @@
                 <div class="big_img">
                   <el-image
                     style="width: 30px; height: 30px"
-                    :src="scope.row.faceUrl"
+                    :src="scope.row.faceUrl.startsWith('https://sourcebyte.vip') ? scope.row.faceUrl : 'https://sourcebyte.vip' + scope.row.faceUrl"
                     lazy
                     class="img"
                   >
@@ -221,22 +223,69 @@ export default {
       this.refreshData()
     },
     // 模糊查询
-    onSubmit(state,cb) {
-      state=this.state
-      console.log(state)
+    onSubmit() {
+      
+      console.log(this.house.type)
+      console.log(this.house.state)
       console.log("submit!");
-      if(state!=""){
+      if(this.house.state!=""&&this.house.type!=''){
         setTimeout(() => {
           this.tableData.forEach((item)=>{
-            if(item.smallTitle.indexOf(state)>-1){
+            // console.log(item)
+            if(item.smallTitle.indexOf(this.house.state)>-1|item.articleType.indexOf(this.house.type)>-1){
               console.log(item)
+              console.log(1)
               this.ArrState.push(item)
               this.tableData=this.ArrState
             }
+            // else{
+            //   this.tableData=[]
+            // }
           })
-         this.state=''
+         this.house.state=''
         },);
+      }
+      else if(this.house.state!=""){
+        setTimeout(() => {
+          this.tableData.forEach((item)=>{
+            // console.log(item)
+            if(item.smallTitle.indexOf(this.house.state)>-1){
+              console.log(item)
+              console.log(2)
+              this.ArrState.push(item)
+              this.tableData=this.ArrState
+            }
+            // else{
+            //   this.tableData=[]
+            // }
+          })
+         this.house.state=''
+        },);
+      }
+      else if(this.house.type!=""){
+        console.log(3)
         
+          this.tableData.forEach((item)=>{
+            // console.log(item)
+            if(item.articleType.indexOf(this.house.type)>-1){
+              console.log(item)
+              console.log(3)
+              this.ArrState.push(item)
+              console.log(this.ArrState)
+              this.tableData=this.ArrState
+            }
+            // else{
+            //   this.tableData=[]
+            // }
+          })
+        
+        if(this.ArrState.length==0){
+            console.log(4)
+            this.tableData=[]
+          }
+      }
+      else{
+        this.tableData=[]
       }
     },
     toggleSelection(rows) {
@@ -283,7 +332,7 @@ export default {
     // 刷新页面
     refreshData() {
       // location.reload();
-      
+      this.ArrState=[]
       setTimeout(() => {
         this.loading=true;
         setTimeout(() => {
