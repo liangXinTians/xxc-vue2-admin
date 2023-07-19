@@ -3,22 +3,19 @@ import { Notification, MessageBox, Message } from "element-ui";
 import store from "@/store";
 import { getToken } from "@/utils/auth";
 
-export default function(config) {
+export default function (config) {
   // 创建axios实例
   const service = axios.create({
     // axios中请求配置有baseURL选项，表示请求URL公共部分
     // baseURL: process.env.VUE_APP_BASE_API,
-    baseURL: "http://127.0.0.1:4523/m1/3017070-0-default/",
-    //  process.env.VUE_APP_BASE_API + (config.url.includes("portal-sso") || config.url.includes("portal-user")
-    // ? ""
-    // : ""),
+    baseURL:'http://127.0.0.1:4523/m1/3017070-0-default',
     // 超时 b
-    timeout: 50000
+    timeout: 50000,
   });
 
   // request拦截器
   service.interceptors.request.use(
-    config => {
+    (config) => {
       // Do something before request is sentconfig.headers['Content-Type'] = 'application/json';
       getToken() && (config.headers["Authorization"] = getToken());
       config.headers["Content-Type"] =
@@ -34,7 +31,7 @@ export default function(config) {
       }
       return config;
     },
-    error => {
+    (error) => {
       console.log(error);
       Promise.reject(error);
     }
@@ -42,7 +39,7 @@ export default function(config) {
 
   // 响应拦截器
   service.interceptors.response.use(
-    res => {
+    (res) => {
       const code = res.data.code;
       if (code === 401) {
         MessageBox.confirm(
@@ -51,29 +48,29 @@ export default function(config) {
           {
             confirmButtonText: "重新登录",
             cancelButtonText: "取消",
-            type: "warning"
+            type: "warning",
           }
         ).then(() => {
           store.dispatch("FedLogOut").then(() => {
-            // 为了重新实例化vue-router对象 避免bug
-            location.reload();
+              // 为了重新实例化vue-router对象 避免bug
+              location.reload();
           });
         });
       } else if (code !== 200) {
         Notification.error({
-          title: res.data.msg
+          title: res.data.msg,
         });
         return Promise.reject("error");
       } else {
         return res.data;
       }
     },
-    error => {
+    (error) => {
       console.log("err" + error);
       Message({
         message: error.message,
         type: "error",
-        duration: 5 * 1000
+        duration: 5 * 1000,
       });
       return Promise.reject(error);
     }
