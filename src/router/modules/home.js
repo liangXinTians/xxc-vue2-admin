@@ -2,7 +2,7 @@
 
 import Layout from "@/layout";
 /* 定义component */
-const home = () => import("@/views/demo/home");
+const home = () => import("@/views/Home");
 const test = () => import("@/views/demo/test");
 
 const mapRouter = {
