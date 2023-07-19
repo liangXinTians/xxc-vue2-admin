@@ -18,11 +18,7 @@ export default {
   },
   computed: {
     cachedViews () {
-<<<<<<< HEAD
       return this.$store.state.tagsView.cachedViews
-=======
-      return this.$store.state.tagsView.cachedViews 
->>>>>>> a8fd7630d1e84ec1c09fc9eaf7b9dc1ee5625a46
     },
     key () {
       return this.$route.path
