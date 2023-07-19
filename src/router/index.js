@@ -32,8 +32,8 @@ export const constantRoutes = [
   homeRouter,
   complexRouter,
   commonRouter,
-  system,
-  houseRouter
+  houseRouter,
+  system
 ];
 
 const router = new Router({
