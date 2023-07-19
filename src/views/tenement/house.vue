@@ -468,6 +468,9 @@ export default {
     };
   },
   mounted() {
+    if(localStorage.getItem('hiddenList')){
+      this.hiddenList = JSON.parse(localStorage.getItem('hiddenList'))
+    }
     this.getHouseList();
   },
   methods: {
@@ -537,6 +540,7 @@ export default {
       value.forEach(item => {
         this.hiddenList.push(item)
       });
+      localStorage.setItem('hiddenList',JSON.stringify(this.hiddenList))
     },
     
     // 修改页面条数
