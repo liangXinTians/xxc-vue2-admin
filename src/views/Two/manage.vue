@@ -3,7 +3,7 @@
     <div class="app-main">
       <div class="app-container">
         <!-- 头部 -->
-        <div class="app-container">
+        <div class="app-container-header">
           <!-- 搜索条 -->
           <div class="nav">
             <div class="right flex">
@@ -19,7 +19,8 @@
                     v-model="house.type"
                     clearable
                     placeholder="请选择类型"
-                    class="input"
+                    size="mini"
+                    
                   >
                     <el-option
                       v-for='item in articleType '
@@ -83,6 +84,7 @@
             "
             tooltip-effect="dark"
             style="width: 100%"
+            height=""
             @selection-change="handleSelectionChange"
             v-loading="loading"
           >
@@ -93,18 +95,21 @@
               label="#"
               width="50"
               type="index"
+              align="center"
             ></el-table-column>
             <el-table-column
               class=".el-table"
               prop="articleType"
               label="类型"
               width="100"
+              align="center"
             ></el-table-column>
             <el-table-column
               class=".el-table"
               prop="smallTitle"
               label="标题"
               width="200"
+              align="center"
             ></el-table-column>
             <el-table-column
               class=".el-table"
@@ -112,13 +117,16 @@
               label="简介"
               width="586"
               header-align="center"
-              
+              align="center"
+
             ></el-table-column>
             <el-table-column
               class=".el-table"
               prop="faceUrl"
               label="封面图"
               width="100"
+              align="center"
+              show-overflow-tooltip
             >
               <template slot-scope="scope">
                 <div class="big_img">
@@ -140,14 +148,16 @@
               prop="articleSource"
               label="来源"
               width="100"
+              align="center"
             ></el-table-column>
             <el-table-column
               class=".el-table"
               prop="remark"
               label="备注"
               width="100"
+              align="center"
             ></el-table-column>
-            <el-table-column prop="articleType" label="操作"> </el-table-column>
+            <el-table-column prop="articleType" label="操作"  align="center"> </el-table-column>
           </el-table>
           <!-- <el-table-column prop="articleType" label="类型" width="120"></el-table-column> -->
           <!-- <el-table-column prop="address" label="地址" show-overflow-tooltip> -->
@@ -322,8 +332,9 @@ export default {
         .catch((err) => {});
     },
     handleSizeChange(val) {
-      this.pageSize = val;
+      this.pagesize = val;
       console.log(`每页 ${val} 条`);
+
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -357,14 +368,17 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 .app-main {
   width: 100%;
   position: relative;
   overflow: hidden;
+  background-color: #ffffff;
 }
 .app-container {
   padding: 8px;
-  background-color: #ffffff;
+  // background-color: #ffffff;
+  position: relative;
 }
 .el-row {
   margin-bottom: 5px;
@@ -376,17 +390,20 @@ export default {
 .el-table {
   font-size: 12px;
   width: 100%;
-  height: 800px;
   background-color:#ffffff;
 }
 .pagination {
   padding: 5px;
   width: 100%;
-  height: 25px;
+  height: 35px;
   margin-bottom: 5px;
   margin-top: 5px;
   background-color:#ffffff;
-  position: relative;
+  position: fixed;
+  bottom: 0;
+  left: -5px;
+  border-top: solid 2px #e6ebf5;
+  z-index: 1;
 }
 .pagin {
   position: absolute;
@@ -416,16 +433,13 @@ export default {
   border-color: #1890ff;
 }
 
-.input {
-  width: 140px;
-}
 
 .app-main {
   min-height: calc(100vh - 84px);
   width: 100%;
   position: relative;
   overflow: hidden;
-  .app-container {
+  .app-container-header {
     padding: 8px;
     .nav {
       margin-left: -5px;
@@ -437,4 +451,5 @@ export default {
     }
   }
 }
+
 </style>
