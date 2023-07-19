@@ -7,6 +7,8 @@ import Router from "vue-router";
 import commonRouter from "./modules/common"; // xx路由
 import homeRouter from "./modules/home"; // xx路由
 import complexRouter from "./modules/complex"; // xx路由
+import system from "./modules/system"; // xx路由
+import houseRouter from "./modules/tenement"; // xx路由
 
 Vue.use(Router);
 
@@ -29,7 +31,9 @@ export const constantRoutes = [
   },
   homeRouter,
   complexRouter,
-  commonRouter
+  commonRouter,
+  houseRouter,
+  system
 ];
 
 const router = new Router({

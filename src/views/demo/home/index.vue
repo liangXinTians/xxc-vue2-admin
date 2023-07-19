@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div id="main-container">
     <section class="app-main">
       <div class="editor-container">
@@ -215,10 +216,29 @@ export default {
   position: relative;
   box-sizing: border-box;
 }
+=======
+  <div id="container">
+    首页
+  </div>
+</template>
+<script>
+export default {
+  name: "Demo",
+  data() {
+    return {
+      activeName: "1"
+    };
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+>>>>>>> a8fd7630d1e84ec1c09fc9eaf7b9dc1ee5625a46
 #container {
   width: 100%;
   height: 100%;
 }
+<<<<<<< HEAD
 .svg-icon {
     width: 1em;
     height: 1em;
@@ -330,4 +350,6 @@ export default {
   }
 }
 
+=======
+>>>>>>> a8fd7630d1e84ec1c09fc9eaf7b9dc1ee5625a46
 </style>
