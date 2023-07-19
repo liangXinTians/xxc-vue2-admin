@@ -58,6 +58,7 @@
         size="mini"
         :default-sort="{ prop: 'date', order: 'descending' }"
         height="560"
+        :header-cell-style="{background:'rgb(248,248,249)'}"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column prop="operId" label="日志编号" width="120">
@@ -300,6 +301,7 @@ export default {
 
 <style lang="scss">
 .app-main {
+   background-color: rgb(255, 255, 255);
   .app-container {
     padding: 8px;
     .header {

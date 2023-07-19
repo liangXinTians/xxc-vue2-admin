@@ -47,6 +47,7 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
         size="mini"
+        :header-cell-style="{background:'rgb(248,248,249)'}"
       >
         <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column label="序号" prop="noticeId" width="55">
@@ -203,6 +204,7 @@ export default {
 
 <style lang="scss">
 .app-main {
+   background-color: rgb(255, 255, 255);
   .app-container {
     padding: 8px;
     .header {
