@@ -71,13 +71,14 @@
               label="#"
               width="50"
               type="index"
+              align="center"
             ></el-table-column>
             <el-table-column
               class=".el-table"
               prop="type"
               label="类别"
               width="150"
-              
+              align="center"
             ></el-table-column>
             <el-table-column
               class=".el-table juzhong"
@@ -85,7 +86,7 @@
               label="标题"
               width="717"
               header-align="center"
-              
+              align="center"
             ></el-table-column>
 
             
@@ -94,6 +95,7 @@
               prop="state"
               label="状态"
               width="100"
+              align="center"
             ><el-tag v-if="state=1" color="#e8f4ff" size="mini">
               正常
             </el-tag>
@@ -106,8 +108,9 @@
               prop="remark"
               label="备注"
               width="300"
+              align="center"
             ></el-table-column>
-            <el-table-column prop="articleType" label="操作"> </el-table-column>
+            <el-table-column prop="articleType" label="操作" align="center"> </el-table-column>
           </el-table>
           <!-- <el-table-column prop="articleType" label="类型" width="120"></el-table-column> -->
           <!-- <el-table-column prop="address" label="地址" show-overflow-tooltip> -->
@@ -260,7 +263,7 @@ export default {
       this.multipleSelection = val;
     },
     handleSizeChange(val) {
-      this.pageSize = val;
+      this.pagesize = val;
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {

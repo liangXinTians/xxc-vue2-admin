@@ -63,30 +63,35 @@
             label="#"
             width="50"
             type="index"
+            align="center"
           ></el-table-column>
           <el-table-column
             class=".el-table"
             prop="linkName"
             label="站点名称"
             width="180"
+            align="center"
           ></el-table-column>
           <el-table-column
             class=".el-table"
             prop="linkUrl"
             label="站点链接"
             width="502"
+            align="center"
           ></el-table-column>
           <el-table-column
             class=".el-table"
             prop="linkLogo"
             label="站点Logo"
             width="200"
+            align="center"
           ></el-table-column>
           <el-table-column
             class=".el-table"
             prop="linkShow"
             label="展示地址"
             width="200"
+            align="center"
           >
           </el-table-column>
           <el-table-column
@@ -94,14 +99,16 @@
             prop="linkWay"
             label="联系方式"
             width="100"
+            align="center"
           ></el-table-column>
           <el-table-column
             class=".el-table"
             prop="remark"
             label="备注"
             width="80"
+            align="center"
           ></el-table-column>
-          <el-table-column prop="articleType" label="操作"> </el-table-column>
+          <el-table-column prop="articleType" label="操作" align="center"> </el-table-column>
         </el-table>
         <!-- <el-table-column prop="articleType" label="类型" width="120"></el-table-column> -->
         <!-- <el-table-column prop="address" label="地址" show-overflow-tooltip> -->
@@ -211,7 +218,7 @@ export default {
       this.multipleSelection = val;
     },
     handleSizeChange(val) {
-      this.pageSize = val;
+      this.pagesize = val;
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
