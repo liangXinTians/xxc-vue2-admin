@@ -15,7 +15,7 @@
             <el-input
               class="input"
               placeholder="请输入名称"
-              v-model="plot.name"
+              v-model.trim="plot.name"
               size="mini"
               clearable
             >
@@ -25,13 +25,17 @@
             <el-input
               class="input"
               placeholder="请输入代号"
-              v-model="plot.code"
+              v-model.trim="plot.code"
               clearable
             >
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="onSubmit" native-type="submit"
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="onSubmit"
+              native-type="submit"
               >搜索</el-button
             >
             <el-button icon="el-icon-refresh" @click="onClear">重置</el-button>
@@ -227,6 +231,10 @@ export default {
   .nav {
     width: 100%;
     height: 36px;
+
+    .input {
+      width: 140px;
+    }
   }
 }
 
@@ -236,7 +244,4 @@ export default {
 }
 
 // 输入框
-.input {
-  width: 140px;
-}
 </style>
