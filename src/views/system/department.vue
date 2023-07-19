@@ -51,6 +51,7 @@
         :default-expand-all="fold"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         size="mini"
+        :header-cell-style="{background:'rgb(248,248,249)'}"
       >
         <el-table-column prop="deptName" label="部门名称" width="400">
         </el-table-column>
@@ -157,8 +158,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .app-main {
+  background-color: rgb(255, 255, 255);
   .app-container {
     padding: 8px;
     .header {
