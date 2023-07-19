@@ -31,7 +31,7 @@
   </div>
 </template>
 <script>
-import SvgIcon from "../../../components/SvgIcon/index.vue"
+import SvgIcon from "../../components/SvgIcon/index.vue"
 import echarts from 'echarts'
 export default {
   components: {
