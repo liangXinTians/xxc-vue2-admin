@@ -1,6 +1,6 @@
 <template>
   <div id="container">
-    首页411
+    首页
   </div>
 </template>
 <script>

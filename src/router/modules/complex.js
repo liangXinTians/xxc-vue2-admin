@@ -6,6 +6,7 @@ import Layout from "@/layout";
 const Link = () => import("@/views/Two/link");
 const Manage = () => import("@/views/Two/manage");
 const Serve = () => import("@/views/Two/serve");
+const Example = () => import("@/views/demo/test");
 
 const complexRouter = {
   path: "/complex",
@@ -13,14 +14,13 @@ const complexRouter = {
   redirect: "/complex/example",
   name: "内容管理",
   meta: {
-    title: "内容管理",
-    icon: "skill"
+    title: "内容管理"
   },
   children: [
     {
       path: "example",
       name: "example",
-      component:Manage ,
+      component: Manage,
       meta: { title: "文章管理" }
     },
     {
