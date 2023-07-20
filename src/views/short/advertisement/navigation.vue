@@ -168,7 +168,7 @@
         ref="multipleTable"
         :data="tableData2"
         tooltip-effect="dark"
-        height="600px"
+        height="550px"
         v-loading="loading"
       >
         <el-table-column type="selection" width="" class="table-colum">
@@ -187,7 +187,7 @@
         </el-table-column>
         <el-table-column prop="navigateUrl" label="导航图标" width="">
           <template slot-scope="scope">
-            <div class="img-div">
+            <div class="big-img">
               <img :src="scope.row.navigateUrl" min-width="30" height="30" />
             </div>
           </template>
@@ -456,10 +456,19 @@ export default {
   bottom: 10px;
   right: 20px;
 }
-.img-div {
+.big-img {
   height: 30px;
   width: 30px;
   overflow: hidden;
+  border-radius: 5px;
+  background-color: rgb(230, 230, 230);
+}
+.big-img img {
+  transition: all 0.4s;
+}
+
+.big-img img:hover {
+  transform: scale(1.2);
 }
 /* 图像上传 */
 .avatar-uploader .el-upload {

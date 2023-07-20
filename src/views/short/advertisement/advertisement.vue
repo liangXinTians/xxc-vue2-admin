@@ -173,7 +173,7 @@
         ref="multipleTable"
         :data="tableData2"
         tooltip-effect="dark"
-        height="600px"
+        height="550px"
         v-loading="loading"
       >
         <el-table-column type="selection" width="" class="table-colum" sortable>
@@ -203,7 +203,7 @@
         ></el-table-column>
         <el-table-column prop="advertUrl" label="广告图片" width="">
           <template slot-scope="scope">
-            <div class="img-div">
+            <div class="big-img">
               <img :src="scope.row.advertUrl" min-width="30" height="30" />
             </div>
           </template>
@@ -444,14 +444,8 @@ export default {
 }
 .table {
   font-size: 12px;
-  /* margin-top: 10px; */
-  /* padding-left: 100px; */
 }
 .table-colum {
-  /* display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
   height: 400px;
 }
 .column-ture {
@@ -469,10 +463,20 @@ export default {
   bottom: 10px;
   right: 20px;
 }
-.img-div {
-  width: 30px;
+
+.big-img {
   height: 30px;
+  width: 30px;
   overflow: hidden;
+  border-radius: 5px;
+  background-color: rgb(230, 230, 230);
+}
+.big-img img {
+  transition: all 0.4s;
+}
+
+.big-img img:hover {
+  transform: scale(1.2);
 }
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;

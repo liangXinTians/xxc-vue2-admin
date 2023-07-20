@@ -190,7 +190,7 @@
         ref="multipleTable"
         :data="tableData2"
         tooltip-effect="dark"
-        height="600px"
+        height="550px"
         v-loading="loading"
       >
         <el-table-column type="selection" width="55" class="table-colum">
@@ -216,7 +216,9 @@
         </el-table-column>
         <el-table-column prop="goodsItemUrl" label="主图" width="120">
           <template slot-scope="scope">
-            <img :src="scope.row.goodsItemUrl" min-width="30" height="30" />
+            <div class="big-img">
+              <img :src="scope.row.goodsItemUrl" min-width="30" height="30" />
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="sortNo" label="浏览量" width="120">
@@ -471,6 +473,22 @@ export default {
   white-space: nowrap; */
   height: 400px;
 }
+.big-img {
+  height: 30px;
+  width: 30px;
+  overflow: hidden;
+  border-radius: 5px;
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.144);
+}
+.big-img img {
+  transition: all 0.4s;
+}
+
+.big-img img:hover {
+  transform: scale(1.2);
+}
+
 .bottom {
   position: fixed;
   bottom: 10px;

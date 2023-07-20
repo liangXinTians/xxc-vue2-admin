@@ -11,19 +11,32 @@
         <div class="flex fen">
           <div class="fen-text">订单号</div>
           <el-input
-            v-model="inputFen"
+            v-model="query.orderCode"
             placeholder="请输入订单号"
             size="medium"
           ></el-input>
         </div>
+
         <div class="flex fen">
           <div class="fen-text">订单状态</div>
-          <el-input
-            v-model="inputMing"
-            placeholder="请输入商品名称"
-            size="medium"
-          ></el-input>
+          <el-form ref="form" :data="tableData3">
+            <el-select
+              v-model="tableData3.dictLabel"
+              placeholder="请选择订单状态"
+              clearable
+              @keyup.enter.native="handleQuery"
+            >
+              <el-option
+                v-for="item in tableData3"
+                :key="item.id"
+                :value="item.dictLabel"
+                :label="item.dictLabel"
+              >
+              </el-option>
+            </el-select>
+          </el-form>
         </div>
+
         <el-form
           :inline="true"
           :model="short"
@@ -54,9 +67,9 @@
         bordered
         :customRow="loadCustomRow"
         ref="multipleTable"
-        :data="tableData"
+        :data="tableData2"
         tooltip-effect="dark"
-        height="600px"
+        height="550px"
         v-loading="loading"
       >
         <el-table-column type="selection" width="" class="table-colum">
@@ -72,15 +85,15 @@
         <el-table-column
           prop="receiverPhone"
           label="联系方式"
-          width="200px"
+          width="140px"
         ></el-table-column>
         <el-table-column prop="receiverAddress" label="收货地址">
         </el-table-column>
         <el-table-column prop="payAmount" label="支付金额" width="">
         </el-table-column>
-        <el-table-column prop="" label="支付方式" width="150px">
+        <el-table-column prop="" label="支付方式" width="130px">
         </el-table-column>
-        <el-table-column prop="" label="支付时间" width="150px">
+        <el-table-column prop="" label="支付时间" width="110px">
         </el-table-column>
         <el-table-column prop="payStatus" label="支付状态" width="">
           <template slot-scope="scope">
@@ -93,7 +106,7 @@
         <el-table-column prop="orderStatus" label="订单状态">
           <template slot-scope="scope">
             <div>
-              {{ scope.row.orderStatus === 0 ? "待付款" : "待发货" }}
+              {{ scope.row.orderStatus === 1 ? "待发货" : "待付款" }}
             </div>
           </template>
         </el-table-column>
@@ -111,25 +124,33 @@
         :page-sizes="[20, 50, 100, 200]"
         :page-size="20"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length"
+        :total="tableData2.length"
       >
       </el-pagination>
     </div>
   </div>
 </template>
 <script>
-import { getOrderList } from "../../../api/short"
+import { getOrderList, getOrderStatus } from "../../../api/short"
 import { exportToExcel } from '../../../utils/xlsx'
 export default {
   name: "orders",
   data () {
     return {
       loading: false,
-      tableData: [] //储存列表
+      query: {
+        orderCode: '',
+        orderStatus: ''
+      },
+      tableData: [],//暂时储存列表
+      tableData2: [], //储存列表
+      tableData3: [] //支付状态储存
+
     }
   },
   created () {
     this.getApiOrderList()
+    this.getApiOrderStatus()
   },
   methods: {
     //导出
@@ -146,8 +167,8 @@ export default {
         isAsc: "desc"
       }
       getShortList(params).then(res => {
-        this.total = res.total
         this.tableData = res.rows
+        this.tableData2 = this.tableData
       })
     },
     //当前页
@@ -169,11 +190,53 @@ export default {
       getOrderList().then(res => {
         console.log('bbb')
         this.tableData = res.rows
+        this.tableData2 = this.tableData
+      })
+    },
+    //商品支付状态
+    getApiOrderStatus () {
+      getOrderStatus().then(res => {
+        console.log('bbb')
+        this.tableData3 = res.data
       })
     },
     // 表单提交
     onSubmit () {
-      this.refreshData()
+      setTimeout(() => {
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          this.tableData2 = ''
+
+          if (this.tableData3.dictLabel == "待发货") {
+            this.query.orderStatus = 0
+          }
+          if (this.tableData3.dictLabel == "待付款") {
+            this.query.orderStatus = 1
+          }
+          if (this.tableData3.dictLabel == "待收货") {
+            this.query.orderStatus = 2
+          }
+          if (this.tableData3.dictLabel == "待评价") {
+            this.query.orderStatus = 3
+          }
+          if (this.tableData3.dictLabel == "已完成") {
+            this.query.orderStatus = 4
+          }
+          if (this.tableData3.dictLabel == "已关闭") {
+            this.query.orderStatus = 5
+          }
+          if (this.tableData3.dictLabel == "已退款") {
+            this.query.orderStatus = 6
+          }
+
+          this.tableData2 = this.tableData.filter(
+            (item) =>
+              item.orderStatus == this.query.orderStatus &&
+              item.orderCode.includes(this.query.orderCode)
+          )
+        }, 500)
+      }, 500)
     },
     // 刷新页面
     refreshData () {
@@ -192,16 +255,16 @@ export default {
       this.refreshData()
     },
   },
-  computed: {
-    //输入值筛选
-    tableData2 () {
-      return this.tableData.filter(
-        (item) =>
-          item.goodsClassify.includes(this.query.goodsClassify) &&
-          item.goodsName.includes(this.query.goodsName)
-      )
-    },
-  },
+  // computed: {
+  //   //输入值筛选
+  //   tableData2 () {
+  //     return this.tableData.filter(
+  //       (item) =>
+  //         item.goodsClassify.includes(this.query.goodsClassify) &&
+  //         item.goodsName.includes(this.query.goodsName)
+  //     )
+  //   },
+  // },
 
 }
 </script>
@@ -241,17 +304,9 @@ export default {
   margin-right: 10px;
 }
 .table {
-  font-size: 12px;
-  /* margin-top: 10px; */
-  /* padding-left: 100px; */
+  font-size: 10px;
 }
-.table-colum {
-  /* display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
-  height: 400px;
-}
+
 .column-ture {
   display: flex;
   justify-content: center;
@@ -266,6 +321,5 @@ export default {
   position: fixed;
   bottom: 10px;
   right: 20px;
-  /* width: 100%; */
 }
 </style>

@@ -48,6 +48,15 @@ export function apiGetAddress (data) {
   })
 }
 
+export function getOrderStatus (data) {
+  return request({
+    url: '/web-api/system/dict/data/type/mall_order_status',
+    method: 'GET',
+    data
+  })
+}
+
+
 //广告管理类别
 export function getAdvertType (data) {
   return request({
