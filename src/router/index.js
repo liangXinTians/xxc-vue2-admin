@@ -1,14 +1,15 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from "vue"
+import Router from "vue-router"
 
 /**
  * 静态模块路由
  */
-import commonRouter from "./modules/common"; // xx路由
-import homeRouter from "./modules/home"; // xx路由
-import complexRouter from "./modules/complex"; // xx路由
+import commonRouter from "./modules/common" // xx路由
+import homeRouter from "./modules/home" // xx路由
+import complexRouter from "./modules/complex" // xx路由
+import shortRouter from "./modules/short"
 
-Vue.use(Router);
+Vue.use(Router)
 
 // 公共路由
 export const constantRoutes = [
@@ -29,12 +30,13 @@ export const constantRoutes = [
   },
   homeRouter,
   complexRouter,
-  commonRouter
-];
+  commonRouter,
+  shortRouter
+]
 
 const router = new Router({
   base: "/xxc-vue2/",
   routes: constantRoutes,
   mode: "hash"
-});
-export default router;
+})
+export default router
