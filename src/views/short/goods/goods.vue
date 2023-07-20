@@ -224,8 +224,29 @@
         <el-table-column prop="sortNo" label="浏览量" width="120">
         </el-table-column>
         <el-table-column prop="status" label="是否上架" width="120">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.status"
+              active-color="rgb(24,144,255)"
+              inactive-color="rgb(220,223,230)"
+              :active-value="1"
+              :inactive-value="0"
+            >
+            </el-switch>
+          </template>
         </el-table-column>
-        <el-table-column prop="hotStatus" label="是否热门"> </el-table-column>
+        <el-table-column prop="hotStatus" label="是否热门">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.hotStatus"
+              active-color="rgb(24,144,255)"
+              inactive-color="rgb(220,223,230)"
+              :active-value="1"
+              :inactive-value="0"
+            >
+            </el-switch>
+          </template>
+        </el-table-column>
         <el-table-column prop="mallGoodsSpecList" label="操作">
         </el-table-column>
       </el-table>
