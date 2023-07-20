@@ -64,20 +64,20 @@ const shortRouter = {
         }
       ]
     },
-    // {
-    //   path: "address",
-    //   name: "地址管理",
-    //   component: Blank,
-    //   meta: { title: "地址管理", icon: "skill" },
-    //   children: [
-    //     {
-    //       path: "address",
-    //       name: "address",
-    //       component: address,
-    //       meta: { title: "收货地址", icon: "skill" }
-    //     }
-    //   ]
-    // }
+    {
+      path: "address",
+      name: "地址管理",
+      component: Blank,
+      meta: { title: "地址管理", icon: "skill" },
+      children: [
+        {
+          path: "address",
+          name: "address",
+          component: address,
+          meta: { title: "收货地址", icon: "skill" }
+        }
+      ]
+    }
   ]
 }
 export default shortRouter
