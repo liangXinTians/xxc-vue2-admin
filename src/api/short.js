@@ -15,6 +15,14 @@ export function getNavigateList (data) {
     data
   })
 }
+//获取分类管理信息
+export function getCategoryList (data) {
+  return request({
+    url: '/web-api/system/classify/list',
+    method: 'GET',
+    params: data
+  })
+}
 //广告管理列表
 export function getAdvertiseList (data) {
   return request({

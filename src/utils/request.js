@@ -9,8 +9,6 @@ export default function (config) {
     // axios中请求配置有baseURL选项，表示请求URL公共部分
     // baseURL: process.env.VUE_APP_BASE_API,
     baseURL: 'http://127.0.0.1:4523/m1/3017070-0-default',
-
-
     // 超时 b
     timeout: 50000,
   })
