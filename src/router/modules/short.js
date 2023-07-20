@@ -7,7 +7,7 @@ const category = () => import("@/views/short/goods/category.vue")
 const orders = () => import("@/views/short/orders/orders.vue")
 const advertisement = () => import("@/views/short/advertisement/advertisement.vue")
 const navigation = () => import("@/views/short/advertisement/navigation.vue")
-// const address = () => import("@/views/short/address/address.vue")
+const address = () => import("@/views/short/address/address.vue")
 const shortRouter = {
   path: "/goods",
   component: Layout,
