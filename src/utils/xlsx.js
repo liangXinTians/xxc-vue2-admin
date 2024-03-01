@@ -9,12 +9,12 @@ export function exportToExcel (fliename, dom, that) {
     const xlsxParam = { raw: true }
     const wb = XLSX.utils.table_to_book(dom, xlsxParam)
     // 导出excel文件名
-    let fileName = fliename + new Date().getTime() + '.xlsx'
+    const fileName = fliename + new Date().getTime() + '.xlsx'
 
     const wbout = XLSX.write(wb, {
       bookType: 'xlsx',
       bookSST: true,
-      type: 'array',
+      type: 'array'
     })
     try {
       // 下载保存文件

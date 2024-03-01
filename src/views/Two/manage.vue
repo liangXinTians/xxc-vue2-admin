@@ -20,38 +20,34 @@
                     clearable
                     placeholder="请选择类型"
                     size="mini"
-                    
                   >
                     <el-option
-                      v-for='item in articleType '
+                      v-for="item in articleType "
                       :key="item.value"
                       :label="item.dictLabel"
                       :value="item.dictValue"
-                      
-                    >
-                    </el-option>
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="标题">
                   <el-input
-                  v-model="house.state"
-                  
-                  placeholder="请输入内容"
-                  :trigger-on-focus="false"
-                  size="mini"
-                  ></el-input>
+                    v-model="house.state"
+
+                    placeholder="请输入内容"
+                    :trigger-on-focus="false"
+                    size="mini"
+                  />
                 </el-form-item>
                 <el-form-item>
                   <el-button
                     type="primary"
                     icon="el-icon-search"
                     @click="onSubmit"
-
-                    >搜索</el-button
-                  >
-                  <el-button icon="el-icon-refresh" @click="onClear"
-                    >重置</el-button
-                  >
+                  >搜索</el-button>
+                  <el-button
+                    icon="el-icon-refresh"
+                    @click="onClear"
+                  >重置</el-button>
                 </el-form-item>
               </el-form>
               <div class="another">
@@ -60,13 +56,13 @@
                     icon="el-icon-search"
                     size="mini"
                     circle
-                  ></el-button>
+                  />
                   <el-button
                     icon="el-icon-refresh"
                     size="mini"
                     circle
                     @click="refreshData"
-                  ></el-button>
+                  />
                 </el-row>
               </div>
             </div>
@@ -76,6 +72,7 @@
         <div class="el-table">
           <el-table
             ref="multipleTable"
+            v-loading="loading"
             :data="
               tableData.slice(
                 (currentPage - 1) * pagesize,
@@ -86,9 +83,8 @@
             style="width: 100%"
             height=""
             @selection-change="handleSelectionChange"
-            v-loading="loading"
           >
-            <el-table-column type="selection" width="55"> </el-table-column>
+            <el-table-column type="selection" width="55" />
             <el-table-column
               class=".el-table"
               prop="index"
@@ -96,21 +92,21 @@
               width="50"
               type="index"
               align="center"
-            ></el-table-column>
+            />
             <el-table-column
               class=".el-table"
               prop="articleType"
               label="类型"
               width="100"
               align="center"
-            ></el-table-column>
+            />
             <el-table-column
               class=".el-table"
               prop="smallTitle"
               label="标题"
               width="200"
               align="center"
-            ></el-table-column>
+            />
             <el-table-column
               class=".el-table"
               prop="bigTitle"
@@ -118,8 +114,7 @@
               width="586"
               header-align="center"
               align="center"
-
-            ></el-table-column>
+            />
             <el-table-column
               class=".el-table"
               prop="faceUrl"
@@ -137,7 +132,7 @@
                     class="img"
                   >
                     <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline"></i>
+                      <i class="el-icon-picture-outline" />
                     </div>
                   </el-image>
                 </div>
@@ -149,15 +144,15 @@
               label="来源"
               width="100"
               align="center"
-            ></el-table-column>
+            />
             <el-table-column
               class=".el-table"
               prop="remark"
               label="备注"
               width="100"
               align="center"
-            ></el-table-column>
-            <el-table-column prop="articleType" label="操作"  align="center"> </el-table-column>
+            />
+            <el-table-column prop="articleType" label="操作" align="center" />
           </el-table>
           <!-- <el-table-column prop="articleType" label="类型" width="120"></el-table-column> -->
           <!-- <el-table-column prop="address" label="地址" show-overflow-tooltip> -->
@@ -168,147 +163,143 @@
           <div class="pagin">
             <div class="block">
               <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
                 :current-page="currentPage"
                 :page-sizes="[10, 20, 50, 100]"
                 :page-size="pagesize"
                 background
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="tableData.length"
-              >
-              </el-pagination>
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+              />
             </div>
           </div>
         </div>
-        <div class="el-dialog"></div>
+        <div class="el-dialog" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getApiList,getAriticleTyoe } from "../../api/two";
+import { getApiList, getAriticleTyoe } from '../../api/two'
 export default {
   data() {
     return {
-      state:'',         //标题框输入数据
-      ArrState:[],       //用来临时存放查找出来的数据
-      loading:false,
+      state: '', // 标题框输入数据
+      ArrState: [], // 用来临时存放查找出来的数据
+      loading: false,
       house: {
         type: '',
-        state: "",
+        state: ''
       },
-      articleType:[],
+      articleType: [],
       formInline: {
-        user: "",
-        region: "",
+        user: '',
+        region: ''
       },
       tableData: [
         {
-          articleType: "",
-          smallTitle: "",
-          bigTitle: "",
-          faceUrl: "",
-          articleSource: "",
-          remark: "",
-        },
+          articleType: '',
+          smallTitle: '',
+          bigTitle: '',
+          faceUrl: '',
+          articleSource: '',
+          remark: ''
+        }
       ],
       multipleSelection: [],
-      currentPage: 1, //初始页
-      pagesize: 10, //    每页的数据
-    };
+      currentPage: 1, // 初始页
+      pagesize: 10 //    每页的数据
+    }
   },
   mounted() {
-    this.getList();
-    this.getTyoe();
+    this.getList()
+    this.getTyoe()
   },
   methods: {
     // 表单提交
     onSubmit() {
-      console.log(this.house.type, this.house.state);
+      console.log(this.house.type, this.house.state)
     },
     // 清除表单内容
     onClear() {
       this.refreshData()
     },
     // 模糊查询
+
     onSubmit() {
-      
       console.log(this.house.type)
       console.log(this.house.state)
-      console.log("submit!");
-      if(this.house.state!=""&&this.house.type!=''){
+      console.log('submit!')
+      if (this.house.state !== '' && this.house.type !== '') {
         setTimeout(() => {
-          this.tableData.forEach((item)=>{
+          this.tableData.forEach((item) => {
             // console.log(item)
-            if(item.smallTitle.indexOf(this.house.state)>-1|item.articleType.indexOf(this.house.type)>-1){
+            if (item.smallTitle.indexOf(this.house.state) > -1 | item.articleType.indexOf(this.house.type) > -1) {
               console.log(item)
               console.log(1)
               this.ArrState.push(item)
-              this.tableData=this.ArrState
+              this.tableData = this.ArrState
             }
             // else{
             //   this.tableData=[]
             // }
           })
-         this.house.state=''
-        },);
-      }
-      else if(this.house.state!=""){
+          this.house.state = ''
+        },)
+      } else if (this.house.state !== '') {
         setTimeout(() => {
-          this.tableData.forEach((item)=>{
+          this.tableData.forEach((item) => {
             // console.log(item)
-            if(item.smallTitle.indexOf(this.house.state)>-1){
+            if (item.smallTitle.indexOf(this.house.state) > -1) {
               console.log(item)
               console.log(2)
               this.ArrState.push(item)
-              this.tableData=this.ArrState
+              this.tableData = this.ArrState
             }
             // else{
             //   this.tableData=[]
             // }
           })
-         this.house.state=''
-        },);
-      }
-      else if(this.house.type!=""){
+          this.house.state = ''
+        },)
+      } else if (this.house.type !== '') {
         console.log(3)
-        
-          this.tableData.forEach((item)=>{
-            // console.log(item)
-            if(item.articleType.indexOf(this.house.type)>-1){
-              console.log(item)
-              console.log(3)
-              this.ArrState.push(item)
-              console.log(this.ArrState)
-              this.tableData=this.ArrState
-            }
-            // else{
-            //   this.tableData=[]
-            // }
-          })
-        
-        if(this.ArrState.length==0){
-            console.log(4)
-            this.tableData=[]
+
+        this.tableData.forEach((item) => {
+          // console.log(item)
+          if (item.articleType.indexOf(this.house.type) > -1) {
+            console.log(item)
+            console.log(3)
+            this.ArrState.push(item)
+            console.log(this.ArrState)
+            this.tableData = this.ArrState
           }
-      }
-      else{
-        this.tableData=[]
+          // else{
+          //   this.tableData=[]
+          // }
+        })
+
+        if (this.ArrState.length === 0) {
+          console.log(4)
+          this.tableData = []
+        }
+      } else {
+        this.tableData = []
       }
     },
     toggleSelection(rows) {
       if (rows) {
         rows.forEach((row) => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
       } else {
-        this.$refs.multipleTable.clearSelection();
+        this.$refs.multipleTable.clearSelection()
       }
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val;
+      this.multipleSelection = val
     },
     // 获取文章内容
     getList() {
@@ -316,47 +307,45 @@ export default {
         .then((res) => {
           // console.log(res);
           // console.log(res.rows);
-          this.tableData = res.rows;
-          
+          this.tableData = res.rows
         })
-        .catch((err) => {});
-        console.log(123)
+        .catch((err) => {})
+      console.log(123)
     },
     // 获取文章类型数据
-    getTyoe(){
+    getTyoe() {
       getAriticleTyoe().then((res) => {
-          console.log(res); 
-          this.articleType=res.data
-          console.log(this.articleType)
-        })
-        .catch((err) => {});
+        console.log(res)
+        this.articleType = res.data
+        console.log(this.articleType)
+      })
+        .catch((err) => {})
     },
     handleSizeChange(val) {
-      this.pagesize = val;
-      console.log(`每页 ${val} 条`);
-
+      this.pagesize = val
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
-      console.log(`当前页: ${val}`);
+      this.currentPage = val
+      console.log(`当前页: ${val}`)
     },
     // 刷新页面
     refreshData() {
       // location.reload();
-      this.ArrState=[]
+      this.ArrState = []
       setTimeout(() => {
-        this.loading=true;
+        this.loading = true
         setTimeout(() => {
           this.getList()
-          this.loading=false
-        }, 500);
-      }, 500);
-      console.log(1);
-    },
+          this.loading = false
+        }, 500)
+      }, 500)
+      console.log(1)
+    }
     // 获取类型内容
 
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -432,7 +421,6 @@ export default {
   background-color: #1890ff;
   border-color: #1890ff;
 }
-
 
 .app-main {
   min-height: calc(100vh - 84px);

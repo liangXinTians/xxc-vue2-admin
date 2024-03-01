@@ -5,13 +5,13 @@
 </template>
 <script>
 export default {
-  name: "Demo",
+  name: 'Demo',
   data() {
     return {
-      activeName: "1"
-    };
+      activeName: '1'
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

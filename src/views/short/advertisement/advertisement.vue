@@ -19,20 +19,19 @@
             <el-form-item label="广告类别" prop="advertType">
               <el-form ref="form" :data="tableData3">
                 <el-select
-                  style="width: 100%"
                   v-model="tableData3.dictLabel"
+                  style="width: 100%"
                   placeholder="请选择广告类别"
                   clearable
                   @keyup.enter.native="handleQuery"
                 >
                   <el-option
-                    style="width: 100%"
                     v-for="item in tableData3"
                     :key="item.id"
+                    style="width: 100%"
                     :value="item.dictLabel"
                     :label="item.dictLabel"
-                  >
-                  </el-option>
+                  />
                 </el-select>
               </el-form>
             </el-form-item>
@@ -40,13 +39,13 @@
               <el-input
                 v-model="ruleForm.advertName"
                 placeholder="请输入广告名称"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item label="链接地址" prop="advertAddress">
               <el-input
                 v-model="ruleForm.advertAddress"
                 placeholder="请输入链接地址"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item label="广告图片" prop="advertUrl">
               <el-upload
@@ -64,42 +63,48 @@
               <el-input
                 v-model="ruleForm.sortNo"
                 placeholder="请输入排序"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item label="是否启用">
               <el-radio-group v-model="ruleForm.normalDisable">
-                <el-radio v-model="ruleForm.normalDisable" label="0"
-                  >正常</el-radio
-                >
-                <el-radio v-model="ruleForm.normalDisable" label="1"
-                  >停运</el-radio
-                >
+                <el-radio
+                  v-model="ruleForm.normalDisable"
+                  label="0"
+                >正常</el-radio>
+                <el-radio
+                  v-model="ruleForm.normalDisable"
+                  label="1"
+                >停运</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="备注">
               <el-input
                 v-model="ruleForm.remark"
                 placeholder="请输入备注"
-              ></el-input>
+              />
             </el-form-item>
             <el-form-item style="position: relative; margin: 40px 0 40px 0">
               <div class="add-button">
-                <el-button type="primary" @click="submitForm('ruleForm')"
-                  >确定</el-button
-                >
+                <el-button
+                  type="primary"
+                  @click="submitForm('ruleForm')"
+                >确定</el-button>
                 <el-button @click="resetForm('ruleForm')">取消</el-button>
               </div>
             </el-form-item>
           </el-form>
         </el-dialog>
-        <el-button size="small" @click="dialogVisible = true"
-          ><i class="el-icon-plus"></i> 新增</el-button
-        >
-        <el-button plain size="small" @click="exportData()"
-          ><i class="el-icon-download"></i> 导出</el-button
-        >
+        <el-button
+          size="small"
+          @click="dialogVisible = true"
+        ><i class="el-icon-plus" /> 新增</el-button>
+        <el-button
+          plain
+          size="small"
+          @click="exportData()"
+        ><i class="el-icon-download" /> 导出</el-button>
       </el-row>
-      <div class="top-right" v-show="isShow">
+      <div v-show="isShow" class="top-right">
         <div class="flex fen">
           <div class="fen-text">广告类别</div>
           <el-form ref="form" :data="tableData3">
@@ -114,8 +119,7 @@
                 :key="item.id"
                 :value="item.dictLabel"
                 :label="item.dictLabel"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form>
         </div>
@@ -126,7 +130,7 @@
             v-model="query.advertName"
             placeholder="请输入广告名称"
             size="medium"
-          ></el-input>
+          />
         </div>
         <el-form
           :inline="true"
@@ -135,9 +139,11 @@
           size="mini"
         >
           <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="onSubmit"
-              >搜索</el-button
-            >
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="onSubmit"
+            >搜索</el-button>
             <el-button icon="el-icon-refresh" @click="onClear">重置</el-button>
           </el-form-item>
         </el-form>
@@ -148,13 +154,13 @@
               size="mini"
               circle
               @click="showclick"
-            ></el-button>
+            />
             <el-button
               icon="el-icon-refresh"
               size="mini"
               circle
               @click="onClear"
-            ></el-button>
+            />
           </el-row>
         </div>
       </div>
@@ -163,26 +169,25 @@
     <div class="content">
       <el-table
         id="oIncomTable"
-        :rowKey="(r, i) => i"
+        ref="multipleTable"
+        v-loading="loading"
+        :row-key="(r, i) => i"
         :columns="columns"
-        :dataSource="itemMains"
-        :scroll="{ y: 500 }"
+        :data-source="itemMains"
+        :scroll="{
+          y: '65vh'
+        }"
         :pagination="false"
         :loading="spinning"
         style="margin-top: 10px; width: 100%"
         class="tableCls lable"
         bordered
-        :customRow="loadCustomRow"
-        ref="multipleTable"
+        :custom-row="loadCustomRow"
         :data="tableData2"
         tooltip-effect="dark"
-        height="550px"
-        v-loading="loading"
       >
-        <el-table-column type="selection" width="" class="table-colum" sortable>
-        </el-table-column>
-        <el-table-column prop="" label="#" width="100px" type="index">
-        </el-table-column>
+        <el-table-column type="selection" width="" class="table-colum" sortable />
+        <el-table-column prop="" label="#" width="100px" type="index" />
         <el-table-column prop="advertType" label="广告类别" width="200px">
           <template slot-scope="scope">
             <div>
@@ -190,20 +195,19 @@
                 scope.row.advertType === 0
                   ? "首页轮播图"
                   : scope.row.advertType === 1
-                  ? "首页中部广告位"
-                  : "热门推荐"
+                    ? "首页中部广告位"
+                    : "热门推荐"
               }}
               <!-- 热门推荐2 首页轮播图0 首页中部广告位1 -->
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="advertName" label="广告名称" width="200px">
-        </el-table-column>
+        <el-table-column prop="advertName" label="广告名称" width="200px" />
         <el-table-column
           prop="advertAddress"
           label="链接地址"
           width="200px"
-        ></el-table-column>
+        />
         <el-table-column prop="advertUrl" label="广告图片" width="">
           <template slot-scope="scope">
             <div class="big-img">
@@ -217,12 +221,11 @@
                     : 'https://sourcebyte.vip' + scope.row.advertUrl
                 "
                 lazy
-              >
-              </el-image>
+              />
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="sortNo" label="排序"> </el-table-column>
+        <el-table-column prop="sortNo" label="排序" />
         <el-table-column prop="normalDisable" label="是否启用">
           <template slot-scope="scope">
             <div class="column-ture">
@@ -230,33 +233,32 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="备注" width=""> </el-table-column>
-        <el-table-column prop="" label="操作"> </el-table-column>
+        <el-table-column prop="" label="备注" width="" />
+        <el-table-column prop="" label="操作" />
       </el-table>
     </div>
     <!-- 分页 -->
     <div class="bottom">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[20, 50, 100, 200]"
         :page-size="20"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData2.length"
-      >
-      </el-pagination>
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
 <script>
-import { getAdvertiseList, getAdvertType, upload } from "../../../api/short"
+import { getAdvertiseList, getAdvertType, upload } from '../../../api/short'
 import { exportToExcel } from '../../../utils/xlsx'
 export default {
-  name: "advertisement",
-  data () {
+  name: 'Advertisement',
+  data() {
     return {
-      dialogVisible: false, //新增显示
+      dialogVisible: false, // 新增显示
       ruleForm: {
         advertType: '',
         advertUrl: '',
@@ -269,7 +271,7 @@ export default {
       },
       rules: {
         advertType: [
-          { required: true, message: '广告类别不为空', trigger: 'blur' },
+          { required: true, message: '广告类别不为空', trigger: 'blur' }
         ],
         advertName: [
           { required: true, message: '请选择活动区域', trigger: 'blur' }
@@ -285,7 +287,7 @@ export default {
         ],
         normalDisable: [
           { required: true, message: '选择是否启用', trigger: 'blur' }
-        ],
+        ]
       },
       query: {
         advertType: '',
@@ -294,34 +296,34 @@ export default {
       loading: false,
       isShow: true,
       visible: false,
-      tableData: [], //临时储存列表
-      tableData2: [], //广告储存列表
-      tableData3: [] //advert-type储存列表
+      tableData: [], // 临时储存列表
+      tableData2: [], // 广告储存列表
+      tableData3: [] // advert-type储存列表
 
     }
   },
-  created () {
+  created() {
     this.getApiAdvertiseList()
     this.getApiAdvertType()
   },
   methods: {
-    //导出
-    exportData () {
+    // 导出
+    exportData() {
       exportToExcel('自定义文件名称', document.querySelector('#oIncomTable'), this)
     },
     // 新增列表
-    submitForm () {
-      if (this.tableData3.dictLabel == "首页轮播图") {
+    submitForm() {
+      if (this.tableData3.dictLabel === '首页轮播图') {
         this.ruleForm.advertType = 0
       }
-      if (this.tableData3.dictLabel == "首页中部广告") {
+      if (this.tableData3.dictLabel === '首页中部广告') {
         this.ruleForm.advertType = 1
       }
-      if (this.tableData3.dictLabel == "热门推荐") {
+      if (this.tableData3.dictLabel === '热门推荐') {
         this.ruleForm.advertType = 2
       }
 
-      let obj = { //暂存新增的数据
+      const obj = { // 暂存新增的数据
         advertType: this.ruleForm.advertType,
         advertUrl: this.ruleForm.advertUrl,
         searchValue: this.ruleForm.searchValue,
@@ -332,7 +334,7 @@ export default {
         remark: this.ruleForm.remark
       }
 
-      this.tableData.push(obj) //新增一行数据
+      this.tableData.push(obj) // 新增一行数据
 
       this.ruleForm.advertType = ''
       this.ruleForm.advertUrl = ''
@@ -344,14 +346,13 @@ export default {
       this.ruleForm.remark = ''
 
       this.dialogVisible = false
-
     },
-    resetForm () {
+    resetForm() {
       this.dialogVisible = false
     },
 
     // 引入图片
-    handleUploadSuccess (response, file) {
+    handleUploadSuccess(response, file) {
       // 处理上传成功后的操作
       // console.log(response)
       // console.log(response.url)
@@ -363,9 +364,8 @@ export default {
       upload(params).then(res => {
 
       })
-
     },
-    beforeUpload (file) {
+    beforeUpload(file) {
       // 限制文件大小为50MB
       const isLt50M = file.size / 1024 / 1024 < 50
       if (!isLt50M) {
@@ -379,11 +379,11 @@ export default {
       return isLt50M && isImage
     },
 
-    //隐藏
-    showclick () {
+    // 隐藏
+    showclick() {
       this.isShow = false
     },
-    //每页条数
+    // 每页条数
     // handleSizeChange (val) {
     //   this.cur = val
     //   const params = {
@@ -396,7 +396,7 @@ export default {
     //     this.tableData = res.rows
     //   })
     // },
-    //当前页
+    // 当前页
     // handleCurrentChange (val) {
     //   this.currentPage = val
     //   const params = {
@@ -410,7 +410,7 @@ export default {
     //   })
     // },
     // 刷新页面
-    refreshData () {
+    refreshData() {
       // location.reload();
 
       setTimeout(() => {
@@ -422,11 +422,11 @@ export default {
       }, 500)
     },
     // 清除表单内容
-    onClear () {
+    onClear() {
       this.refreshData()
     },
-    //商品列表
-    getApiAdvertiseList () {
+    // 商品列表
+    getApiAdvertiseList() {
       console.log('aaa')
       getAdvertiseList().then(res => {
         console.log('bbb')
@@ -434,38 +434,37 @@ export default {
         this.tableData2 = this.tableData
       })
     },
-    //adver-type列表
-    getApiAdvertType () {
+    // adver-type列表
+    getApiAdvertType() {
       getAdvertType().then(res => {
-
         this.tableData3 = res.data
       })
     },
 
     // 搜索
-    onSubmit () {
+    onSubmit() {
       setTimeout(() => {
         this.loading = true
         setTimeout(() => {
           this.loading = false
           this.tableData2 = ''
-          if (this.tableData3.dictLabel == "首页轮播图") {
+          if (this.tableData3.dictLabel === '首页轮播图') {
             this.query.advertType = 0
           }
-          if (this.tableData3.dictLabel == "首页中部广告") {
+          if (this.tableData3.dictLabel === '首页中部广告') {
             this.query.advertType = 1
           }
-          if (this.tableData3.dictLabel == "热门推荐") {
+          if (this.tableData3.dictLabel === '热门推荐') {
             this.query.advertType = 2
           }
           this.tableData2 = this.tableData.filter(
             (item) =>
-              item.advertType == this.query.advertType &&
+              item.advertType === this.query.advertType &&
               item.advertName.includes(this.query.advertName)
           )
         }, 500)
       }, 500)
-    },
+    }
   }
 }
 </script>
@@ -507,12 +506,15 @@ export default {
   margin-top: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  height: auto;
 }
 .table {
   font-size: 12px;
 }
 .table-colum {
-  height: 400px;
+  /* height: 400px; */
+  height: auto;
+
 }
 .column-ture {
   display: flex;

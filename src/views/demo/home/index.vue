@@ -7,7 +7,7 @@
             <div class="card-panel" @mouseover="handleMouseOver(index)" @mouseout="handleMouseOut(index)">
               <div class="card-panel-wrapper" :class="card.iconClass" :style="{ backgroundColor: card.backgroundColor }">
                 <span>
-                  <svg-icon class="svg-icon card-panel-icon" :icon-file-name="card.iconFileName" :style="{ fill: card.iconColor }"/>
+                  <svg-icon class="svg-icon card-panel-icon" :icon-file-name="card.iconFileName" :style="{ fill: card.iconColor }" />
                 </span>
               </div>
               <div class="card-panel-description">
@@ -18,11 +18,10 @@
           </el-col>
         </el-row>
 
-
         <el-row class="panel-drawing" style="margin-left: -20px; margin-right: -20px;">
           <el-col class="chart" :span="24" :xs="24" :sm="24" :lg="24">
             <div class="chart-drawing">
-              <canvas class="can" ref="chartContainer" auto-resize></canvas>
+              <canvas ref="chartContainer" class="can" auto-resize />
             </div>
           </el-col>
         </el-row>
@@ -31,20 +30,16 @@
   </div>
 </template>
 <script>
-import SvgIcon from "../../../components/SvgIcon/index.vue"
+import SvgIcon from '../../../components/SvgIcon/index.vue'
 import echarts from 'echarts'
 export default {
+  name: 'Demo',
   components: {
     SvgIcon
   },
-  mounted() {
-    this.createChart();
-    this.handleMouseOut();
-  },
-  name: "Demo",
   data() {
     return {
-      activeName: "1",
+      activeName: '1',
       cardList: [
         {
           iconClass: 'icon-people',
@@ -83,16 +78,20 @@ export default {
           num: '115,734'
         }
       ]
-    };
+    }
+  },
+  mounted() {
+    this.createChart()
+    this.handleMouseOut()
   },
   methods: {
     handleMouseOver(index) {
-      this.cardList[index].iconColor = '';
-      this.cardList[index].backgroundColor = this.getOriginalBackgroundColor(index);
+      this.cardList[index].iconColor = ''
+      this.cardList[index].backgroundColor = this.getOriginalBackgroundColor(index)
     },
     handleMouseOut(index) {
-      this.cardList[index].iconColor = this.getOriginalBackgroundColor(index);
-      this.cardList[index].backgroundColor = '';
+      this.cardList[index].iconColor = this.getOriginalBackgroundColor(index)
+      this.cardList[index].backgroundColor = ''
     },
     getOriginalBackgroundColor(index) {
       return {
@@ -100,11 +99,11 @@ export default {
         'icon-message': '#36a3f7',
         'icon-eye': '#f4516c',
         'icon-dashboard': '#34bfa3'
-      }[this.cardList[index].iconClass];
+      }[this.cardList[index].iconClass]
     },
     createChart() {
       const myChart = echarts.init(this.$refs.chartContainer)
-      myChart.resize({ width: 'auto', height: 'auto' });
+      myChart.resize({ width: 'auto', height: 'auto' })
       const data = {
         title: {
           text: 'Last 7 day\'s IP',
@@ -186,12 +185,12 @@ export default {
       // 使用配置项绘制折线图
       myChart.setOption(data)
       myChart.resize()
-      window.addEventListener('resize', function () {
-        myChart.resize({ width: 'auto', height: 'auto' });
-      });
-    }
+      window.addEventListener('resize', function() {
+        myChart.resize({ width: 'auto', height: 'auto' })
+      })
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

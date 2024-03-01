@@ -1,39 +1,39 @@
 ﻿/** 路由 **/
 
-import Layout from "@/layout";
+import Layout from '@/layout'
 /* 定义component */
-const house = () => import("@/views/tenement/house");
-const housingEstate = () => import("@/views/tenement/housingEstate");
+const house = () => import('@/views/tenement/house')
+const housingEstate = () => import('@/views/tenement/housingEstate')
 
 const houseRouter = {
-    path: "/tenement",
+    path: '/tenement',
     component: Layout,
-    redirect: "/tenement/house",
-    name: "便民租房",
+    redirect: '/tenement/house',
+    name: '用户反馈',
     meta: {
-        title: "便民租房",
-        icon: "github"
+        title: '用户反馈',
+        icon: 'github'
     },
     children: [
         {
-            path: "house",
-            name: "house",
+            path: 'house',
+            name: 'house',
             component: house,
             meta: {
-                title: "房源管理",
-                icon: "github"
+                title: '回收员反馈数据',
+                icon: 'github'
             }
         },
         {
-            path: "housingEstate",
-            name: "housingEstate",
+            path: 'housingEstate',
+            name: 'housingEstate',
             component: housingEstate,
-            meta: { 
-                title: "小区管理", 
-                icon: "github" 
+            meta: {
+                title: '用户反馈数据',
+                icon: 'github'
             }
         }
     ]
-};
+}
 
-export default houseRouter;
+export default houseRouter

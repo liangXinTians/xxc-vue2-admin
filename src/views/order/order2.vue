@@ -1,11 +1,15 @@
 <template>
   <div>
-    <router-view />
+    111
   </div>
 </template>
 
 <script>
 export default {
-  name: 'blank'
 }
+
 </script>
+
+<style lang='' scoped>
+
+</style>

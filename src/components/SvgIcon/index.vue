@@ -1,8 +1,10 @@
 <template>
+  <!-- 首页图标 -->
   <i v-if="iconFileName.indexOf('el-icon-') === 0" :class="iconFileName" />
   <svg v-else class="svg-icon" aria-hidden="true" v-on="$listeners">
     <use :xlink:href="`#icon-${iconFileName}`" />
   </svg>
+  <!-- <div /> -->
 </template>
 
 <script>

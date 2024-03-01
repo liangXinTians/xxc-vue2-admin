@@ -1,7 +1,7 @@
-/**重置message，防止重复点击重复弹出message弹框 */
+/** 重置message，防止重复点击重复弹出message弹框 */
 import {
   Message
-} from 'element-ui';
+} from 'element-ui'
 const showMessage = Symbol('showMessage')
 class DoneMessage {
   [showMessage] (type, options, single) {

@@ -1,20 +1,13 @@
 <template>
   <div class="navbar">
-    <hamburger
-      id="hamburger-container"
-      :is-active="sidebar.opened"
-      class="hamburger-container"
-      @toggleClick="toggleSideBar"
-    />
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
+      @toggleClick="toggleSideBar" />
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
     <div class="right-menu">
       <template v-if="device !== 'mobile'">
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
       </template>
-      <el-dropdown
-        class="avatar-container right-menu-item hover-effect"
-        trigger="click"
-      >
+      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           {{ nickName || "xxc" }}
           <i class="el-icon-caret-bottom" />
@@ -36,18 +29,18 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Breadcrumb from "./Breadcrumb";
-import Hamburger from "./Hamburger";
-import Screenfull from "./Screenfull";
-import ResetPwd from "./ResetPwd";
+import { mapGetters } from "vuex"
+import Breadcrumb from "./Breadcrumb"
+import Hamburger from "./Hamburger"
+import Screenfull from "./Screenfull"
+import ResetPwd from "./ResetPwd"
 
 export default {
-  data() {
+  data () {
     return {
       dialogVisible: false,
       user: {}
-    };
+    }
   },
   components: {
     Breadcrumb,
@@ -59,38 +52,38 @@ export default {
     ...mapGetters(["sidebar", "avatar", "device", "nickName"]),
 
     setting: {
-      get() {
-        return this.$store.state.settings.showSettings;
+      get () {
+        return this.$store.state.settings.showSettings
       },
-      set(val) {
+      set (val) {
         this.$store.dispatch("settings/changeSetting", {
           key: "showSettings",
           value: val
-        });
+        })
       }
     }
   },
   methods: {
-    toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+    toggleSideBar () {
+      this.$store.dispatch("app/toggleSideBar")
     },
-    handleClose() {
-      this.dialogVisible = false;
-      this.$refs.resetPwd.initData();
+    handleClose () {
+      this.dialogVisible = false
+      this.$refs.resetPwd.initData()
     },
-    async logout() {
+    async logout () {
       this.$confirm("确定注销并退出系统吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
         this.$store.dispatch("FedLogOut").then(() => {
-          window.location.href = "/xxc-vue2/";
-        });
-      });
+          window.location.href = "/xxc-vue2/"
+        })
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -108,6 +101,7 @@ export default {
     cursor: pointer;
     transition: background 0.3s;
     -webkit-tap-highlight-color: transparent;
+
     // display: -webkit-box;
     // display: -ms-flexbox;
     // display: flex;
@@ -124,6 +118,7 @@ export default {
       background: rgba(0, 0, 0, 0.025);
     }
   }
+
   .breadcrumb-container {
     float: left;
   }
@@ -138,6 +133,7 @@ export default {
     height: 100%;
     line-height: 50px;
     font-size: 14px;
+
     // display: -webkit-box;
     // display: -ms-flexbox;
     // display: flex;

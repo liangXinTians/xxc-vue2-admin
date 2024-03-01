@@ -33,12 +33,12 @@ const permission = {
   },
   actions: {
     // 生成系统路由和系统按钮权限
-    GenerateRoutes({ commit, state }) {
+    GenerateRoutes ({ commit, state }) {
       return new Promise(async (resolve) => {
         // 获取路由数据
         const routerRes = RoutersData
         rebuildRouter(routerRes?.data)
-        let newRouter = filterAsyncRouter(routerRes.data && routerRes?.data[0].children, 1)
+        const newRouter = filterAsyncRouter(routerRes.data && routerRes?.data[0].children, 1)
         // console.log('走了嘛生成系统路由', newRouter)
         // newRouter.length === 0 && Message.warning('您没有该系统的访问权限，请联系管理员')
         if (routerRes.data == null || newRouter.length === 0) {
@@ -51,7 +51,7 @@ const permission = {
   }
 }
 
-function addRouter(commit, newRouter) {
+function addRouter (commit, newRouter) {
   commit('SET_MENU', newRouter)
   const accessedRoutes = newRouter
   // accessedRoutes.push({
@@ -63,12 +63,11 @@ function addRouter(commit, newRouter) {
   return accessedRoutes
 }
 
-
-function rebuildRouter(router, path = '') {
+function rebuildRouter (router, path = '') {
   if (router?.length) {
     for (let i = 0; i < router.length; i++) {
       if (router[i].hasOwnProperty('path')) {
-        let reset = router[i].path.replace(/(^\/|\/$)/g, '')
+        const reset = router[i].path.replace(/(^\/|\/$)/g, '')
         router[i].path = path == '/' ? (path + reset) : (path + '/' + reset)
       }
       if (router[i].hasOwnProperty('children') && router[i].children) {
@@ -80,13 +79,13 @@ function rebuildRouter(router, path = '') {
   return router
 }
 
-function filterAsyncRouter(asyncRouterMap, hier, systemIndex, moduleIndex) {
+function filterAsyncRouter (asyncRouterMap, hier, systemIndex, moduleIndex) {
   if (!asyncRouterMap) return []
   return asyncRouterMap.reduce((acc, route, index) => {
     // 组织组件名称，用于缓存识别组件
     let name = 'no-name'
     if (route.path) {
-      let pathNames = route.path.match(/\w+/g)
+      const pathNames = route.path.match(/\w+/g)
       if (pathNames) {
         if (pathNames[pathNames.length - 1] !== 'index') {
           name = pathNames[pathNames.length - 1].replace(/\w/, (str) => {
@@ -130,7 +129,6 @@ function filterAsyncRouter(asyncRouterMap, hier, systemIndex, moduleIndex) {
     return acc
   }, [])
 }
-
 
 export const loadView = (view) => { // 路由懒加载
   return (resolve) => require([`@/views/${view}`], resolve)

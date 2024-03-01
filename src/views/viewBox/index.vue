@@ -1,19 +1,19 @@
 <template>
   <!--  请勿删除，用于处理路由菜单层级嵌套未调整组件导致的布局组件叠加问题-->
   <section>
-        <router-view />
+    <router-view />
   </section>
 </template>
 <script>
 export default {
-  name: "ViewBox",
-  data () {
+  name: 'ViewBox',
+  data() {
     return {
       cachedViewsList: []
     }
   },
   computed: {
-    cachedViews () {
+    cachedViews() {
       // console.log(this.$store.state.tagsView.cachedViews.filter(item => {
       //   return this.cachedViewsList.some(ele => ele == item)
       // }),'899')
@@ -21,7 +21,7 @@ export default {
         return this.cachedViewsList.some(ele => ele == item)
       })
     },
-    key () {
+    key() {
       return this.$route.path
     }
   },

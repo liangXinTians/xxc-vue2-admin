@@ -1,51 +1,51 @@
 <template>
   <div id="app">
-    <div class="env_tag" v-if="ENV !== 'production'">{{ ENV }}</div>
+    <div v-if="ENV !== 'production'" class="env_tag">{{ ENV }}</div>
     <router-view v-if="isRouterAlive" />
   </div>
 </template>
 
 <script>
 export default {
-  name: "App",
+  name: 'App',
   data() {
     return {
       isLoading: true,
       isRouterAlive: true
-    };
-  },
-  mounted() {
-    // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
-    window.onbeforeunload = function(e) {
-      var storage = window.localStorage;
-      storage.clear();
-    };
-  },
-  provide() {
-    return {
-      reload: this.reload
-    };
+    }
   },
   computed: {
     ENV() {
-      return process.env.VUE_APP_ENV;
+      return process.env.VUE_APP_ENV
     }
   },
   watch: {
     $route(to, from) {
       // 判断展示router-view 还是 #container
-      this.isLoading = false;
+      this.isLoading = false
+    }
+  },
+  mounted() {
+    // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
+    window.onbeforeunload = function(e) {
+      var storage = window.localStorage
+      storage.clear()
+    }
+  },
+  provide() {
+    return {
+      reload: this.reload
     }
   },
   methods: {
     reload() {
-      this.isRouterAlive = false;
+      this.isRouterAlive = false
       this.$nextTick(() => {
-        this.isRouterAlive = true;
-      });
+        this.isRouterAlive = true
+      })
     }
   }
-};
+}
 </script>
 <style lang="scss">
 body {

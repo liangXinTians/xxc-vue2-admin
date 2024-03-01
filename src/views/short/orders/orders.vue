@@ -3,9 +3,11 @@
     <!-- 头部 -->
     <div class="top">
       <el-row class="top-left">
-        <el-button plain size="small" @click="exportData()"
-          ><i class="el-icon-download"></i> 导出</el-button
-        >
+        <el-button
+          plain
+          size="small"
+          @click="exportData()"
+        ><i class="el-icon-download" /> 导出</el-button>
       </el-row>
       <div class="top-right">
         <div class="flex fen">
@@ -14,7 +16,7 @@
             v-model="query.orderCode"
             placeholder="请输入订单号"
             size="medium"
-          ></el-input>
+          />
         </div>
 
         <div class="flex fen">
@@ -31,8 +33,7 @@
                 :key="item.id"
                 :value="item.dictLabel"
                 :label="item.dictLabel"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form>
         </div>
@@ -44,9 +45,11 @@
           size="mini"
         >
           <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="onSubmit"
-              >搜索</el-button
-            >
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="onSubmit"
+            >搜索</el-button>
             <el-button icon="el-icon-refresh" @click="onClear">重置</el-button>
           </el-form-item>
         </el-form>
@@ -56,45 +59,38 @@
     <div class="content">
       <el-table
         id="oIncomTable"
-        :rowKey="(r, i) => i"
+        ref="multipleTable"
+        v-loading="loading"
+        :row-key="(r, i) => i"
         :columns="columns"
-        :dataSource="itemMains"
-        :scroll="{ y: 500 }"
+        :data-source="itemMains"
+        :scroll="{
+          y: '75vh'
+        }"
         :pagination="false"
         :loading="spinning"
         style="margin-top: 10px; width: 100%"
         class="tableCls lable"
         bordered
-        :customRow="loadCustomRow"
-        ref="multipleTable"
+        :custom-row="loadCustomRow"
         :data="tableData2"
         tooltip-effect="dark"
-        height="550px"
-        v-loading="loading"
+        height="75vh"
       >
-        <el-table-column type="selection" width="" class="table-colum">
-        </el-table-column>
-        <el-table-column prop="" label="#" width="" type="index">
-        </el-table-column>
-        <el-table-column prop="orderCode" label="订单号" width="200px">
-        </el-table-column>
-        <el-table-column prop="orderCreateTime" label="创建时间" width="200px">
-        </el-table-column>
-        <el-table-column prop="receiver" label="收货人" width="">
-        </el-table-column>
+        <el-table-column type="selection" width="" class="table-colum" />
+        <el-table-column prop="" label="#" width="" type="index" />
+        <el-table-column prop="orderCode" label="订单号" width="200px" />
+        <el-table-column prop="orderCreateTime" label="创建时间" width="200px" />
+        <el-table-column prop="receiver" label="收货人" width="" />
         <el-table-column
           prop="receiverPhone"
           label="联系方式"
           width="140px"
-        ></el-table-column>
-        <el-table-column prop="receiverAddress" label="收货地址">
-        </el-table-column>
-        <el-table-column prop="payAmount" label="支付金额" width="">
-        </el-table-column>
-        <el-table-column prop="" label="支付方式" width="130px">
-        </el-table-column>
-        <el-table-column prop="" label="支付时间" width="110px">
-        </el-table-column>
+        />
+        <el-table-column prop="receiverAddress" label="收货地址" />
+        <el-table-column prop="payAmount" label="支付金额" width="" />
+        <el-table-column prop="" label="支付方式" width="130px" />
+        <el-table-column prop="" label="支付时间" width="110px" />
         <el-table-column prop="payStatus" label="支付状态" width="">
           <template slot-scope="scope">
             <div>
@@ -110,82 +106,80 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="" label="备注" width=""> </el-table-column>
-        <el-table-column prop="" label="操作" fixed="right" width="150px">
-        </el-table-column>
+        <el-table-column prop="" label="备注" width="" />
+        <el-table-column prop="" label="操作" fixed="right" width="150px" />
       </el-table>
     </div>
     <!-- 分页 -->
     <div class="bottom">
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[20, 50, 100, 200]"
         :page-size="20"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData2.length"
-      >
-      </el-pagination>
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
 <script>
-import { getOrderList, getOrderStatus } from "../../../api/short"
+import { getOrderList, getOrderStatus } from '../../../api/short'
 import { exportToExcel } from '../../../utils/xlsx'
 export default {
-  name: "orders",
-  data () {
+  name: 'Orders',
+  data() {
     return {
       loading: false,
       query: {
         orderCode: '',
         orderStatus: ''
       },
-      tableData: [],//暂时储存列表
-      tableData2: [], //储存列表
-      tableData3: [] //支付状态储存
+      tableData: [], // 暂时储存列表
+      tableData2: [], // 储存列表
+      tableData3: [] // 支付状态储存
 
     }
   },
-  created () {
+  created() {
     this.getApiOrderList()
     this.getApiOrderStatus()
   },
   methods: {
-    //导出
-    exportData () {
+    // 导出
+    exportData() {
       exportToExcel('自定义文件名称', document.querySelector('#oIncomTable'), this)
     },
-    //每页条数
-    handleSizeChange (val) {
+    // 每页条数
+    handleSizeChange(val) {
       this.cur = val
       const params = {
         pageNum: this.currentPage,
         pageSize: this.cur,
-        orderByColumn: "create_time",
-        isAsc: "desc"
+        orderByColumn: 'create_time',
+        isAsc: 'desc'
       }
       getShortList(params).then(res => {
         this.tableData = res.rows
         this.tableData2 = this.tableData
       })
     },
-    //当前页
-    handleCurrentChange (val) {
+    // 当前页
+    handleCurrentChange(val) {
       this.currentPage = val
       const params = {
         pageNum: this.currentPage,
         pageSize: this.cur,
-        orderByColumn: "create_time",
-        isAsc: "desc"
+        orderByColumn: 'create_time',
+        isAsc: 'desc'
       }
       getShortList(params).then(res => {
         this.tableData = res.rows
       })
     },
-    //商品列表
-    getApiOrderList () {
+    // 商品列表
+    getApiOrderList() {
       console.log('aaa')
       getOrderList().then(res => {
         console.log('bbb')
@@ -193,40 +187,40 @@ export default {
         this.tableData2 = this.tableData
       })
     },
-    //商品支付状态
-    getApiOrderStatus () {
+    // 商品支付状态
+    getApiOrderStatus() {
       getOrderStatus().then(res => {
         console.log('bbb')
         this.tableData3 = res.data
       })
     },
     // 表单提交
-    onSubmit () {
+    onSubmit() {
       setTimeout(() => {
         this.loading = true
         setTimeout(() => {
           this.loading = false
           this.tableData2 = ''
 
-          if (this.tableData3.dictLabel == "待发货") {
+          if (this.tableData3.dictLabel == '待发货') {
             this.query.orderStatus = 0
           }
-          if (this.tableData3.dictLabel == "待付款") {
+          if (this.tableData3.dictLabel == '待付款') {
             this.query.orderStatus = 1
           }
-          if (this.tableData3.dictLabel == "待收货") {
+          if (this.tableData3.dictLabel == '待收货') {
             this.query.orderStatus = 2
           }
-          if (this.tableData3.dictLabel == "待评价") {
+          if (this.tableData3.dictLabel == '待评价') {
             this.query.orderStatus = 3
           }
-          if (this.tableData3.dictLabel == "已完成") {
+          if (this.tableData3.dictLabel == '已完成') {
             this.query.orderStatus = 4
           }
-          if (this.tableData3.dictLabel == "已关闭") {
+          if (this.tableData3.dictLabel == '已关闭') {
             this.query.orderStatus = 5
           }
-          if (this.tableData3.dictLabel == "已退款") {
+          if (this.tableData3.dictLabel == '已退款') {
             this.query.orderStatus = 6
           }
 
@@ -239,7 +233,7 @@ export default {
       }, 500)
     },
     // 刷新页面
-    refreshData () {
+    refreshData() {
       // location.reload();
 
       setTimeout(() => {
@@ -251,10 +245,10 @@ export default {
       }, 500)
     },
     // 清除表单内容
-    onClear () {
+    onClear() {
       this.refreshData()
-    },
-  },
+    }
+  }
   // computed: {
   //   //输入值筛选
   //   tableData2 () {

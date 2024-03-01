@@ -1,56 +1,42 @@
 /** 地图 路由 **/
 
-import Layout from "@/layout";
-import Blank from "@/components/Blank";
+import Layout from '@/layout'
 /* 定义component */
-const department = () => import("@/views/system/department");
-const inform = () => import("@/views/system/inform");
-const operation = () => import("@/views/system/log/operation");
-const login = () => import("@/views/system/log/login");
+const department = () => import('@/views/system/department')
+const inform = () => import('@/views/system/inform')
+const operation = () => import('@/views/system/operation')
+
 
 const mapRouter = {
-  path: "/system",
+  path: '/system',
   component: Layout,
-  redirect: "/system/department",
-  name: "系统管理",
+  redirect: '/system/department',
+  name: '数据统计',
   meta: {
-    title: "系统管理",
-    icon: "system"
+    title: '数据统计',
+    icon: 'system'
   },
   children: [
     {
-      path: "department",
-      name: "部门管理",
+      path: 'department',
+      name: '数据总览',
       component: department,
-      meta: { title: "部门管理", icon: "tree" }
+      meta: { title: '数据总览', icon: 'tree' }
     },
     {
-      path: "inform",
-      name: "inform",
+      path: 'inform',
+      name: '回收统计',
       component: inform,
-      meta: { title: "通知公告", icon: "message" }
+      meta: { title: '回收统计', icon: 'form' }
     },
     {
-      path: "log",
-      name: "日志管理",
-      component: Blank,
-      meta: { title: "日志管理", icon: "edit" },
-      children: [
-        {
-          path: "operation",
-          name: "operation",
-          component: operation,
-          meta: { title: "操作日志", icon: "form" }
-        },
-        {
-          path: "login",
-          name: "login",
-          component: login,
-          meta: { title: "登录日志", icon: "logininfor" }
-        }
-      ]
-    }
-  ]
-};
+      path: 'operation',
+      name: '历史数据',
+      component: operation,
+      meta: { title: '历史数据', icon: 'message' }
+    },
 
-export default mapRouter;
+  ]
+}
+
+export default mapRouter
