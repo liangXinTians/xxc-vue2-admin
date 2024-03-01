@@ -4,6 +4,8 @@
     <div class="top">
       <el-row class="top-left">
         <el-dialog
+          v-dialogDrag
+          title="添加导航管理"
           :visible.sync="dialogVisible"
           width="60%"
           :before-close="handleClose"
@@ -14,12 +16,25 @@
             label-width="100px"
             class="demo-ruleForm"
           >
-            <div class="add-top">添加导航管理</div>
-            <el-form-item label="广告类别" prop="navigateName">
-              <el-input
-                v-model="ruleForm.navigateName"
-                placeholder="请输入导航名称"
-              ></el-input>
+            <el-form-item label="广告类别" prop="advertType">
+              <el-form ref="form" :data="tableData3">
+                <el-select
+                  style="width: 100%"
+                  v-model="tableData3.dictLabel"
+                  placeholder="请选择广告类别"
+                  clearable
+                  @keyup.enter.native="handleQuery"
+                >
+                  <el-option
+                    style="width: 100%"
+                    v-for="item in tableData3"
+                    :key="item.id"
+                    :value="item.dictLabel"
+                    :label="item.dictLabel"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form>
             </el-form-item>
             <el-form-item label="广告名称" prop="advertName">
               <el-input
@@ -33,21 +48,16 @@
                 placeholder="请输入链接地址"
               ></el-input>
             </el-form-item>
-            <el-form-item label="导航图标" prop="advertUrl">
+            <el-form-item label="广告图片" prop="advertUrl">
               <el-upload
-                class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
-                style="border: 1px dashed #d9d9d9; width: 178px; height: 178px"
+                class="upload-demo"
+                action="ruleForm.advertUrl"
+                :on-success="handleUploadSuccess"
+                :before-upload="beforeUpload"
+                :limit="1"
+                :accept="'image/png, image/jpeg'"
               >
-                <img
-                  v-if="ruleForm.advertUrl"
-                  :src="ruleForm.advertUrl"
-                  class="avatar"
-                />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
             </el-form-item>
             <el-form-item label="排序" prop="sortNo">
@@ -58,8 +68,12 @@
             </el-form-item>
             <el-form-item label="是否启用">
               <el-radio-group v-model="ruleForm.normalDisable">
-                <el-radio label="0">正常</el-radio>
-                <el-radio label="1">停运</el-radio>
+                <el-radio v-model="ruleForm.normalDisable" label="0"
+                  >正常</el-radio
+                >
+                <el-radio v-model="ruleForm.normalDisable" label="1"
+                  >停运</el-radio
+                >
               </el-radio-group>
             </el-form-item>
             <el-form-item label="备注">
@@ -68,11 +82,13 @@
                 placeholder="请输入备注"
               ></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')"
-                >确定</el-button
-              >
-              <el-button @click="resetForm('ruleForm')">取消</el-button>
+            <el-form-item style="position: relative; margin: 40px 0 40px 0">
+              <div class="add-button">
+                <el-button type="primary" @click="submitForm('ruleForm')"
+                  >确定</el-button
+                >
+                <el-button @click="resetForm('ruleForm')">取消</el-button>
+              </div>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -86,23 +102,10 @@
       <div class="top-right" v-show="isShow">
         <div class="flex fen">
           <div class="fen-text">广告类别</div>
-          <!-- <el-input
-            v-model="query.advertType"
-            placeholder="请输入广告类别"
-            size="medium"
-          ></el-input> -->
-          <!-- <el-select v-model="tableData3" placeholder="请选择广告类别">
-            <el-option
-              v-for="item in tableData3"
-              :key="item.value"
-              :label="item.dictLabel"
-            >
-            </el-option>
-          </el-select> -->
           <el-form ref="form" :data="tableData3">
             <el-select
               v-model="tableData3.dictLabel"
-              placeholder="选择店铺"
+              placeholder="请选择广告类别"
               clearable
               @keyup.enter.native="handleQuery"
             >
@@ -186,7 +189,7 @@
               {{
                 scope.row.advertType === 0
                   ? "首页轮播图"
-                  : a === 1
+                  : scope.row.advertType === 1
                   ? "首页中部广告位"
                   : "热门推荐"
               }}
@@ -204,7 +207,18 @@
         <el-table-column prop="advertUrl" label="广告图片" width="">
           <template slot-scope="scope">
             <div class="big-img">
-              <img :src="scope.row.advertUrl" min-width="30" height="30" />
+              <el-image
+                class="img"
+                min-width="30"
+                height="30"
+                :src="
+                  scope.row.advertUrl.startsWith('https://sourcebyte.vip')
+                    ? scope.row.advertUrl
+                    : 'https://sourcebyte.vip' + scope.row.advertUrl
+                "
+                lazy
+              >
+              </el-image>
             </div>
           </template>
         </el-table-column>
@@ -212,7 +226,7 @@
         <el-table-column prop="normalDisable" label="是否启用">
           <template slot-scope="scope">
             <div class="column-ture">
-              {{ scope.row.normalDisable === 0 ? "停用" : "正常" }}
+              {{ scope.row.normalDisable === "0" ? "正常" : "停运" }}
             </div>
           </template>
         </el-table-column>
@@ -236,7 +250,7 @@
   </div>
 </template>
 <script>
-import { getAdvertiseList, getAdvertType } from "../../../api/short"
+import { getAdvertiseList, getAdvertType, upload } from "../../../api/short"
 import { exportToExcel } from '../../../utils/xlsx'
 export default {
   name: "advertisement",
@@ -244,6 +258,7 @@ export default {
     return {
       dialogVisible: false, //新增显示
       ruleForm: {
+        advertType: '',
         advertUrl: '',
         searchValue: '',
         advertName: '',
@@ -253,8 +268,8 @@ export default {
         remark: ''
       },
       rules: {
-        searchValue: [
-          { required: true, trigger: 'blur' },
+        advertType: [
+          { required: true, message: '广告类别不为空', trigger: 'blur' },
         ],
         advertName: [
           { required: true, message: '请选择活动区域', trigger: 'blur' }
@@ -262,8 +277,14 @@ export default {
         advertAddress: [
           { required: true, message: '链接地址不能为空', trigger: 'blur' }
         ],
+        advertUrl: [
+          { required: true, message: '广告图片不为空', trigger: 'blur' }
+        ],
         sortNo: [
           { required: true, message: '排序不能为空', trigger: 'blur' }
+        ],
+        normalDisable: [
+          { required: true, message: '选择是否启用', trigger: 'blur' }
         ],
       },
       query: {
@@ -289,58 +310,105 @@ export default {
       exportToExcel('自定义文件名称', document.querySelector('#oIncomTable'), this)
     },
     // 新增列表
-    submitForm (rulrForm) {
-      this.tableData.push(this.ruleForm)
-      this.rulrForm = ''
+    submitForm () {
+      if (this.tableData3.dictLabel == "首页轮播图") {
+        this.ruleForm.advertType = 0
+      }
+      if (this.tableData3.dictLabel == "首页中部广告") {
+        this.ruleForm.advertType = 1
+      }
+      if (this.tableData3.dictLabel == "热门推荐") {
+        this.ruleForm.advertType = 2
+      }
+
+      let obj = { //暂存新增的数据
+        advertType: this.ruleForm.advertType,
+        advertUrl: this.ruleForm.advertUrl,
+        searchValue: this.ruleForm.searchValue,
+        advertName: this.ruleForm.advertName,
+        advertAddress: this.ruleForm.advertAddress,
+        sortNo: this.ruleForm.sortNo,
+        normalDisable: this.ruleForm.normalDisable,
+        remark: this.ruleForm.remark
+      }
+
+      this.tableData.push(obj) //新增一行数据
+
+      this.ruleForm.advertType = ''
+      this.ruleForm.advertUrl = ''
+      this.ruleForm.searchValue = ''
+      this.ruleForm.advertName = ''
+      this.ruleForm.advertAddress = ''
+      this.ruleForm.sortNo = ''
+      this.ruleForm.normalDisable = ''
+      this.ruleForm.remark = ''
+
       this.dialogVisible = false
+
     },
     resetForm () {
       this.dialogVisible = false
     },
-    handleAvatarSuccess (res, file) {
-      this.ruleForm.navigateUrl = file.response.data.fullUrl
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg' || 'image/jpg' || 'image/webp' || 'image/png'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 jgp,jpeg,webp,png格式!')
+
+    // 引入图片
+    handleUploadSuccess (response, file) {
+      // 处理上传成功后的操作
+      // console.log(response)
+      // console.log(response.url)
+      this.ruleForm.advertUrl = response.url
+
+      const params = {
+        advertUrl: response.url
       }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
+      upload(params).then(res => {
+
+      })
+
     },
+    beforeUpload (file) {
+      // 限制文件大小为50MB
+      const isLt50M = file.size / 1024 / 1024 < 50
+      if (!isLt50M) {
+        this.$message.error('上传图片大小不能超过50MB!')
+      }
+      // 限制文件类型为png/jpg/jpeg
+      const isImage = file.type === 'image/png' || file.type === 'image/jpeg'
+      if (!isImage) {
+        this.$message.error('只能上传png/jpg/jpeg格式的图片!')
+      }
+      return isLt50M && isImage
+    },
+
     //隐藏
     showclick () {
       this.isShow = false
     },
     //每页条数
-    handleSizeChange (val) {
-      this.cur = val
-      const params = {
-        pageNum: this.currentPage,
-        pageSize: this.cur,
-        orderByColumn: "create_time",
-        isAsc: "desc"
-      }
-      getShortList(params).then(res => {
-        this.tableData = res.rows
-      })
-    },
+    // handleSizeChange (val) {
+    //   this.cur = val
+    //   const params = {
+    //     pageNum: this.currentPage,
+    //     pageSize: this.cur,
+    //     orderByColumn: "create_time",
+    //     isAsc: "desc"
+    //   }
+    //   getShortList(params).then(res => {
+    //     this.tableData = res.rows
+    //   })
+    // },
     //当前页
-    handleCurrentChange (val) {
-      this.currentPage = val
-      const params = {
-        pageNum: this.currentPage,
-        pageSize: this.cur,
-        orderByColumn: "create_time",
-        isAsc: "desc"
-      }
-      getShortList(params).then(res => {
-        this.tableData = res.rows
-      })
-    },
+    // handleCurrentChange (val) {
+    //   this.currentPage = val
+    //   const params = {
+    //     pageNum: this.currentPage,
+    //     pageSize: this.cur,
+    //     orderByColumn: "create_time",
+    //     isAsc: "desc"
+    //   }
+    //   getShortList(params).then(res => {
+    //     this.tableData = res.rows
+    //   })
+    // },
     // 刷新页面
     refreshData () {
       // location.reload();
@@ -416,14 +484,12 @@ export default {
   margin-left: 20px;
   margin-right: 20px;
 }
-.add-top {
-  font-size: 20px;
-  margin-left: 30px;
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
 .top-left {
   margin-top: 8px;
+}
+.add-button {
+  position: absolute;
+  right: 0;
 }
 .top-right {
   display: flex;
@@ -471,11 +537,11 @@ export default {
   border-radius: 5px;
   background-color: rgb(230, 230, 230);
 }
-.big-img img {
+.big-img .img {
   transition: all 0.4s;
 }
 
-.big-img img:hover {
+.big-img .img:hover {
   transform: scale(1.2);
 }
 .avatar-uploader .el-upload {

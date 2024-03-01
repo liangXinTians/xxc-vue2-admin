@@ -8,6 +8,7 @@
           :visible.sync="dialogVisible"
           width="60%"
           :before-close="handleClose"
+          v-dialogDrag
         >
           <el-form
             :model="ruleForm"
@@ -15,7 +16,6 @@
             label-width="100px"
             class="demo-ruleForm"
           >
-            <!-- <div class="add-top">添加商品管理</div> -->
             <el-row>
               <el-col span="12">
                 <el-form-item label="商品分类" prop="goodsClassify">
@@ -71,11 +71,22 @@
               </el-col>
             </el-row>
 
-            <el-form-item label="主图" prop="goodsItemUrl">
+            <el-form-item label="主图" prop="goodsFaceUrl">
               <el-upload
                 class="avatar-uploader"
                 action="https://jsonplaceholder.typicode.com/posts/"
                 :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+              >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="轮播图" prop="goodsItemUrl">
+              <el-upload
+                class="avatar-uploader"
+                action="https://jsonplaceholder.typicode.com/posts/"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
                 style="border: 1px dashed #d9d9d9; width: 178px; height: 178px"
@@ -88,42 +99,33 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>
-            <el-form-item label="轮播图" prop="articleContent">
-              <el-upload
-                class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
-                style="border: 1px dashed #d9d9d9; width: 178px; height: 178px"
-              >
-                <img
-                  v-if="ruleForm.navigateUrl"
-                  :src="ruleForm.navigateUrl"
-                  class="avatar"
-                />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+            <el-form-item label="图文详情" prop="articleContent">
+              <!-- <el-input
+                type="textarea"
+                v-model="ruleForm.articleContent"
+                :autosize="{ minRows: 9, maxRows: 18 }"
+                placeholder="请输入公告内容"
+              />
+              <mavon-editor v-model="ruleForm.articleContent" /> -->
             </el-form-item>
-            <el-form-item label="图文详情" prop=""> </el-form-item>
 
             <el-form-item label="是否上架">
               <el-radio-group v-model="ruleForm.status">
-                <el-radio label="0">上架</el-radio>
-                <el-radio label="1">下架</el-radio>
+                <el-radio v-model="ruleForm.status" label="0">上架</el-radio>
+                <el-radio v-model="ruleForm.status" label="1">下架</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="是否热门">
               <el-radio-group v-model="ruleForm.hotStatus">
-                <el-radio label="0">是</el-radio>
-                <el-radio label="1">否</el-radio>
+                <el-radio v-model="ruleForm.hotStatus" label="0">是</el-radio>
+                <el-radio v-model="ruleForm.hotStatus" label="1">否</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item class="form-bottom">
-              <el-button type="primary" @click="submitForm('ruleForm')"
-                >确定</el-button
-              >
-              <el-button @click="resetForm('ruleForm')">取消</el-button>
+            <el-form-item style="position: relative; margin: 40px 0 40px 0">
+              <div class="add-button">
+                <el-button type="primary" @click="submitForm()">确定</el-button>
+                <el-button @click="resetForm('ruleForm')">取消</el-button>
+              </div>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -192,6 +194,7 @@
         tooltip-effect="dark"
         height="550px"
         v-loading="loading"
+        @row-click="handleRowClick"
       >
         <el-table-column type="selection" width="55" class="table-colum">
         </el-table-column>
@@ -214,23 +217,35 @@
         </el-table-column>
         <el-table-column prop="goodsStock" label="存库" width="120">
         </el-table-column>
-        <el-table-column prop="goodsItemUrl" label="主图" width="120">
+        <el-table-column prop="goodsFaceUrl" label="主图" width="120">
           <template slot-scope="scope">
             <div class="big-img">
-              <img :src="scope.row.goodsItemUrl" min-width="30" height="30" />
+              <el-image
+                class="img"
+                min-width="30"
+                height="30"
+                :src="
+                  scope.row.goodsFaceUrl.startsWith('https://sourcebyte.vip')
+                    ? scope.row.goodsFaceUrl
+                    : 'https://sourcebyte.vip' + scope.row.goodsFaceUrl
+                "
+                lazy
+              >
+              </el-image>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="sortNo" label="浏览量" width="120">
+        <el-table-column prop="goodsView" label="浏览量" width="120">
         </el-table-column>
         <el-table-column prop="status" label="是否上架" width="120">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
+              @change="changeStatus"
               active-color="rgb(24,144,255)"
               inactive-color="rgb(220,223,230)"
-              :active-value="1"
-              :inactive-value="0"
+              active-value="0"
+              inactive-value="1"
             >
             </el-switch>
           </template>
@@ -239,10 +254,11 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.hotStatus"
+              @change="changeHotStatus"
               active-color="rgb(24,144,255)"
               inactive-color="rgb(220,223,230)"
-              :active-value="1"
-              :inactive-value="0"
+              active-value="0"
+              inactive-value="1"
             >
             </el-switch>
           </template>
@@ -251,6 +267,31 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 上架热门弹出框 -->
+    <el-dialog
+      title="系统提示"
+      :visible.sync="dialogVisible2"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>确定要下架吗</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="aaa()">取 消</el-button>
+        <el-button type="primary" @click="bbb()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="系统提示"
+      :visible.sync="dialogVisible3"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <span>确定要下架吗</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="aaas()">取 消</el-button>
+        <el-button type="primary" @click="bbbs()">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 分页 -->
     <div class="bottom">
       <el-pagination
@@ -267,14 +308,19 @@
   </div>
 </template>
 <script>
-import { getShortList } from "../../../api/short"
+// import { mavonEditor } from "mavon-editor"
+// import "mavon-editor/dist/css/index.css"
+import { getShortList, getInfo, changeStatus, upload } from "../../../api/short"
 import { exportToExcel } from '../../../utils/xlsx'
+
 export default {
   name: "goods",
   data () {
     return {
       dialogVisible: false, //弹出框
-      imageUrl: '',
+      dialogVisible2: false, //弹出框
+      dialogVisible3: false, //弹出框
+      // imageUrl: '',
       ruleForm: {
         goodsClassify: '',
         goodsName: '',
@@ -282,11 +328,13 @@ export default {
         newPrice: '',
         oldPrice: '',
         goodsStock: '',
+        goodsFaceUrl: '',
         goodsItemUrl: '',
         articleContent: '',
         mallGoodsSpecList: '',
         status: '',
         hotStatus: '',
+        goodsView: '0'
       },
       rules: {
         goodsClassify: [
@@ -314,8 +362,10 @@ export default {
         goodsClassify: "",
         goodsName: "",
       },
+      user: [],//getInfo个人数据
       tableData: [],
       tableData2: [],
+      selection: [],//选中行的数据
       loading: false,
       currentPage: 1,
       cur: 20,
@@ -324,7 +374,7 @@ export default {
   },
   created () {
     this.getApiShortList()
-    // this.tableData2()
+    this.getApiInfo()
   },
   methods: {
     //弹出框
@@ -340,9 +390,37 @@ export default {
       exportToExcel('自定义文件名称', document.querySelector('#oIncomTable'), this)
     },
     // 新增列表
-    submitForm (rulrForm) {
-      this.tableData.push(this.ruleForm)
-      this.rulrForm = ''
+    submitForm () {
+      let obj = {
+        goodsClassify: this.ruleForm.goodsClassify,
+        goodsName: this.ruleForm.goodsName,
+        goodsFeature: this.ruleForm.goodsFeature,
+        newPrice: this.ruleForm.newPrice,
+        oldPrice: this.ruleForm.oldPrice,
+        goodsStock: this.ruleForm.goodsStock,
+        goodsItemUrl: this.ruleForm.goodsItemUrl,
+        articleContent: this.ruleForm.articleContent,
+        mallGoodsSpecList: this.ruleForm.mallGoodsSpecList,
+        status: this.ruleForm.status,
+        hotStatus: this.ruleForm.hotStatus,
+        goodsView: this.ruleForm.goodsView,
+
+      }
+      this.tableData.push(obj)
+
+      this.ruleForm.goodsClassify = '',
+        this.ruleForm.goodsName = '',
+        this.ruleForm.goodsFeature = '',
+        this.ruleForm.newPrice = '',
+        this.ruleForm.oldPrice = '',
+        this.ruleForm.goodsStock = '',
+        this.ruleForm.goodsItemUrl = '',
+        this.ruleForm.articleContent = '',
+        this.ruleForm.mallGoodsSpecList = '',
+        this.ruleForm.status = '',
+        this.ruleForm.hotStatus = '',
+        this.ruleForm.goodsView = ''
+
       this.dialogVisible = false
     },
     resetForm () {
@@ -392,20 +470,85 @@ export default {
     },
     //商品列表
     getApiShortList () {
-      console.log('aaa')
+      // console.log('aaa')
       getShortList().then(res => {
-        console.log('bbb')
+        // console.log('bbb')
         this.tableData = res.rows
         this.tableData2 = this.tableData
       })
     },
+
+    getApiInfo () {
+      getInfo().then(res => {
+        this.user = res.user
+      })
+    },
+    //选中table中行数据
+    handleRowClick (row) {
+      console.log(row)
+      this.selection = row
+    },
+
+    //改变是否上架开关状态
+    changeStatus () {
+      if (this.user.user !== "admin") {
+        this.dialogVisible2 = true
+      }
+    },
+    //改变是否热门状态
+    changeHotStatus () {
+      if (this.user.user !== "admin") {
+        this.dialogVisible3 = true
+      }
+    },
+
+    //switch弹出框确定.取消
+    aaa () {
+      this.dialogVisible2 = false
+      if (this.selection.status = '1') {
+        this.selection.status = '0'
+      }
+    },
+    bbb () {
+      this.dialogVisible2 = false
+      const params = {
+        id: this.selection.id,
+        status: this.selection.status
+      }
+      changeStatus(params).then(res => {
+
+      })
+      if (this.selection.status = '1') {
+        this.selection.status = '0'
+      }
+    },
+    aaas () {
+      this.dialogVisible3 = false
+      if (this.selection.hotStatus = '1') {
+        this.selection.hotStatus = '0'
+      }
+    },
+    bbbs () {
+      this.dialogVisible3 = false
+      const params = {
+        id: this.selection.id,
+        status: this.selection.hotStatus
+      }
+      changeStatus(params).then(res => {
+      })
+      if (this.selection.hotStatus = '1') {
+        this.selection.hotStatus = '0'
+      }
+    },
+
+
 
     //更多
     showclick () {
       this.show = false
     },
 
-    //提交
+    //搜索
     onSubmit () {
       setTimeout(() => {
         this.loading = true
@@ -461,12 +604,9 @@ export default {
 .top-left {
   margin-top: 8px;
 }
-
-.add-top {
-  font-size: 20px;
-  margin-left: 30px;
-  margin-top: 30px;
-  margin-bottom: 30px;
+.add-button {
+  position: absolute;
+  right: 0;
 }
 .top-right {
   display: flex;
@@ -502,11 +642,11 @@ export default {
   background-color: rgb(230, 230, 230);
   box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.144);
 }
-.big-img img {
+.big-img .img {
   transition: all 0.4s;
 }
 
-.big-img img:hover {
+.big-img .img:hover {
   transform: scale(1.2);
 }
 
@@ -514,9 +654,5 @@ export default {
   position: fixed;
   bottom: 10px;
   right: 20px;
-}
-.form-bottom {
-  margin-left: 600px;
-  margin-top: 20px;
 }
 </style>

@@ -4,6 +4,7 @@
     <div class="top">
       <el-row class="top-left">
         <el-dialog
+          v-dialogDrag
           title="添加导航管理"
           :visible.sync="dialogVisible"
           width="60%"
@@ -33,7 +34,7 @@
                 action="#"
                 list-type="picture-card"
                 :auto-upload="false"
-                limit="1"
+                :limit="1"
               >
                 <i slot="default" class="el-icon-plus"></i>
                 <div slot="file" slot-scope="{ file }">
@@ -48,13 +49,6 @@
                       @click="handlePictureCardPreview(file)"
                     >
                       <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleDownload(file)"
-                    >
-                      <i class="el-icon-download"></i>
                     </span>
                     <span
                       v-if="!disabled"
@@ -78,8 +72,12 @@
             </el-form-item>
             <el-form-item label="是否启用">
               <el-radio-group v-model="ruleForm.normalDisable">
-                <el-radio label="0">正常</el-radio>
-                <el-radio label="1">停运</el-radio>
+                <el-radio v-model="ruleForm.normalDisable" label="0"
+                  >正常</el-radio
+                >
+                <el-radio v-model="ruleForm.normalDisable" label="1"
+                  >停运</el-radio
+                >
               </el-radio-group>
             </el-form-item>
             <el-form-item label="备注">
@@ -88,11 +86,13 @@
                 placeholder="请输入备注"
               ></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitForm('ruleForm')"
-                >确定</el-button
-              >
-              <el-button @click="resetForm('ruleForm')">取消</el-button>
+            <el-form-item style="position: relative; margin: 40px 0 40px 0">
+              <div class="add-button">
+                <el-button type="primary" @click="submitForm('ruleForm')"
+                  >确定</el-button
+                >
+                <el-button @click="resetForm('ruleForm')">取消</el-button>
+              </div>
             </el-form-item>
           </el-form>
         </el-dialog>
@@ -188,7 +188,18 @@
         <el-table-column prop="navigateUrl" label="导航图标" width="">
           <template slot-scope="scope">
             <div class="big-img">
-              <img :src="scope.row.navigateUrl" min-width="30" height="30" />
+              <el-image
+                class="img"
+                min-width="30"
+                height="30"
+                :src="
+                  scope.row.navigateUrl.startsWith('https://sourcebyte.vip')
+                    ? scope.row.navigateUrl
+                    : 'https://sourcebyte.vip' + scope.row.navigateUrl
+                "
+                lazy
+              >
+              </el-image>
             </div>
           </template>
         </el-table-column>
@@ -196,7 +207,7 @@
         <el-table-column prop="normalDisable" label="是否启用">
           <template slot-scope="scope">
             <div class="column-ture">
-              {{ scope.row.normalDisable === 0 ? "停用" : "正常" }}
+              {{ scope.row.normalDisable === "0" ? "正常" : "停运" }}
             </div>
           </template>
         </el-table-column>
@@ -221,7 +232,7 @@
   </div>
 </template>
 <script>
-import { getNavigateList } from "../../../api/short"
+import { getNavigateList, upload } from "../../../api/short"
 import { exportToExcel } from '../../../utils/xlsx'
 export default {
   name: "goods",
@@ -297,9 +308,25 @@ export default {
       exportToExcel('自定义文件名称', document.querySelector('#oIncomTable'), this)
     },
     // 新增列表
-    submitForm (rulrForm) {
-      this.tableData.push(this.ruleForm)
-      this.rulrForm = ''
+    submitForm () {
+
+      let obj = {
+        navigateName: this.ruleForm.navigateName,
+        navigateAddress: this.ruleForm.navigateAddress,
+        navigateUrl: this.ruleForm.navigateUrl,
+        sortNo: this.ruleForm.sortNo,
+        normalDisable: this.ruleForm.normalDisable,
+        remark: this.ruleForm.remark
+      }
+
+      this.tableData.push(obj)
+
+      this.ruleForm.navigateName = '',
+        this.ruleForm.navigateAddress = '',
+        this.ruleForm.navigateUrl = '',
+        this.ruleForm.sortNo = '',
+        this.ruleForm.normalDisable = '',
+        this.ruleForm.remark = ''
       this.dialogVisible = false
     },
     resetForm () {
@@ -388,6 +415,8 @@ export default {
   },
 }
 </script>
+
+
 <style scoped>
 .all {
   background-color: rgb(255, 255, 255);
@@ -406,12 +435,12 @@ export default {
 .top-left {
   margin-top: 8px;
 }
-.add-top {
-  font-size: 20px;
-  margin-left: 30px;
-  margin-top: 30px;
-  margin-bottom: 30px;
+
+.add-button {
+  position: absolute;
+  right: 0px;
 }
+
 .top-right {
   display: flex;
 }
@@ -463,11 +492,11 @@ export default {
   border-radius: 5px;
   background-color: rgb(230, 230, 230);
 }
-.big-img img {
+.big-img .img {
   transition: all 0.4s;
 }
 
-.big-img img:hover {
+.big-img .img:hover {
   transform: scale(1.2);
 }
 /* 图像上传 */

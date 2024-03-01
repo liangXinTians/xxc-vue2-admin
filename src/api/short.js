@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-//商品管理列表
+// 商品管理列表
 export function getShortList (data) {
   return request({
     url: '/web-api/system/goods/list',
@@ -7,7 +7,7 @@ export function getShortList (data) {
     data
   })
 }
-//导航管理列表
+// 导航管理列表
 export function getNavigateList (data) {
   return request({
     url: '/web-api/system/navigate/list',
@@ -15,7 +15,7 @@ export function getNavigateList (data) {
     data
   })
 }
-//获取分类管理信息
+// 获取分类管理信息
 export function getCategoryList (data) {
   return request({
     url: '/web-api/system/classify/list',
@@ -23,7 +23,7 @@ export function getCategoryList (data) {
     params: data
   })
 }
-//广告管理列表
+// 广告管理列表
 export function getAdvertiseList (data) {
   return request({
     url: '/web-api/system/advert/list',
@@ -39,7 +39,7 @@ export function getOrderList (data) {
     data
   })
 }
-//地址管理
+// 地址管理
 export function apiGetAddress (data) {
   return request({
     url: '/web-api/system/address/list',
@@ -56,12 +56,38 @@ export function getOrderStatus (data) {
   })
 }
 
-
-//广告管理类别
+// 广告管理类别
 export function getAdvertType (data) {
   return request({
     url: '/web-api/system/dict/data/type/mall_advert_type',
     method: 'GET',
     data
+  })
+}
+
+// 个人信息
+export function getInfo (data) {
+  return request({
+    url: '/web-api/getInfo',
+    method: 'GET',
+    data
+  })
+}
+
+// 个人信息
+export function changeStatus (data) {
+  return request({
+    url: '/web-api/system/goods/changeStatus',
+    method: 'PUT',
+    data
+  })
+}
+
+// 个人信息
+export function upload (params) {
+  return request({
+    url: '/web-api/common/upload',
+    method: 'POST',
+    params
   })
 }
