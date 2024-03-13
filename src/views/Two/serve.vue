@@ -88,6 +88,7 @@ export default {
       }).then(res => {
         console.log(111, res.data.data)
         this.tableData = res.data.data
+
         this.tableDatas = this.tableData
         localStorage.setItem('getProduct', JSON.stringify(this.tableData))
       })
