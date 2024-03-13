@@ -89,27 +89,7 @@ module.exports = {
         symbolId: 'icon-[name]'
       })
       .end()
-    // config.module
-    //   .rule('fonts')
-    //   .test(/\.(ttf|woff|woff2|eot|otf)(\?.*)?$/)
-    //   .use('url-loader')
-    //   .loader('url-loader')
-    //   .tap((options) => {
-    //     options = {
-    //       ...options,
-    //       limit: 1024 * 1024,
-    //       name: 'fonts/[name].[hash:7].[ext]',
-    //     }
-    //     return options
-    //   })
-    //   .end()
-    //   .use('file-loader')
-    //   .loader('file-loader')
-    //   .tap((options) => {
-    //     // 修改选项
-    //     return options
-    //   })
-    //   .end()
+
 
     config.module
       .rule('fonts')

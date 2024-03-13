@@ -1,136 +1,55 @@
 <template>
-  <div class="app-main">
-    <div class="app-container">
-      <!-- 头部 -->
-      <div class="nav">
-        <div class="right flex">
-          <!-- 表单 -->
-          <el-form
-            :inline="true"
-            :model="house"
-            class="demo-form-inline form"
-            size="mini"
-          >
-            <el-form-item label="站点名称">
-              <el-input
-                v-model="house.linkName"
-                placeholder="请输入站点名称"
-              />
-            </el-form-item>
-            <el-form-item label="联系方式">
-              <el-input
-                v-model="house.state"
-                placeholder="请输入联系方式"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                type="primary"
-                icon="el-icon-search"
-                @click="onSubmit"
-              >搜索</el-button>
-              <el-button
-                icon="el-icon-refresh"
-                @click="onClear"
-              >重置</el-button>
-            </el-form-item>
-          </el-form>
-          <div class="another">
-            <el-row>
-              <el-button icon="el-icon-search" size="mini" circle />
-              <el-button
-                icon="el-icon-refresh"
-                size="mini"
-                circle
-                @click="onClear"
-              />
-            </el-row>
+  <div>
+    <div class="app-main">
+      <div class="app-container">
+        <!-- 头部 -->
+        <div class="app-container-header">
+          <!-- 搜索条 -->
+          <div class="nav">
+            <div class="right flex">
+              <!-- 表单 -->
+              <el-form :inline="true" :model="house" class="demo-form-inline form" size="medium">
+                <el-form-item label="名字">
+                  <el-input v-model="house.name" placeholder="请输入名字" :trigger-on-focus="false" size="medium" />
+                </el-form-item>
+                <el-form-item label="学号">
+                  <el-input v-model="house.id" placeholder="请输入学号" :trigger-on-focus="false" size="medium" />
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="el-icon-search" class="button" @click="onSubmit">搜索</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- 内容 -->
-      <div class="el-table">
-        <el-table
-          ref="multipleTable"
-          v-loading="loading"
-          :data="
-            linkList.slice((currentPage - 1) * pagesize, currentPage * pagesize)
-          "
-          tooltip-effect="dark"
-          style="width: 100%"
-        >
-          <el-table-column type="selection" width="55" />
-          <el-table-column
-            class=".el-table"
-            prop="index"
-            label="#"
-            width="50"
-            type="index"
-            align="center"
-          />
-          <el-table-column
-            class=".el-table"
-            prop="linkName"
-            label="站点名称"
-            width="180"
-            align="center"
-          />
-          <el-table-column
-            class=".el-table"
-            prop="linkUrl"
-            label="站点链接"
-            width="502"
-            align="center"
-          />
-          <el-table-column
-            class=".el-table"
-            prop="linkLogo"
-            label="站点Logo"
-            width="200"
-            align="center"
-          />
-          <el-table-column
-            class=".el-table"
-            prop="linkShow"
-            label="展示地址"
-            width="200"
-            align="center"
-          />
-          <el-table-column
-            class=".el-table"
-            prop="linkWay"
-            label="联系方式"
-            width="100"
-            align="center"
-          />
-          <el-table-column
-            class=".el-table"
-            prop="remark"
-            label="备注"
-            width="80"
-            align="center"
-          />
-          <el-table-column prop="articleType" label="操作" align="center" />
-        </el-table>
-        <!-- <el-table-column prop="articleType" label="类型" width="120"></el-table-column> -->
-        <!-- <el-table-column prop="address" label="地址" show-overflow-tooltip> -->
-        <!-- </el-table-column> -->
-      </div>
-
-      <!-- 分页器 -->
-      <div class="pagination">
-        <div class="pagin">
-          <div class="block">
-            <el-pagination
-              :current-page="currentPage"
-              :page-sizes="[5, 10, 50, 100]"
-              :page-size="pagesize"
-              background
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="linkList.length"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-            />
+        <!-- 内容 -->
+        <div class="el-table">
+          <el-table :data="tableDatas" style="width: 100%" :full-width="true">
+            <el-table-column prop="name" label="姓名" width="180">
+            </el-table-column>
+            <el-table-column prop="phone" label="手机号" width="240">
+            </el-table-column>
+            <el-table-column prop="id" label="学号" width="240">
+            </el-table-column>
+            <el-table-column prop="age" label="年纪" width="180">
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" width="240">
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <button @click="deleteIt(scope.$index)">删除</button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <!-- 分页器 -->
+        <div class="pagination">
+          <div class="pagin">
+            <div class="block">
+              <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize"
+                background layout="total, sizes, prev, pager, next, jumper" :total="tableData.length"
+                @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            </div>
           </div>
         </div>
       </div>
@@ -139,129 +58,121 @@
 </template>
 
 <script>
-import { getLinkList } from '../../api/two'
+import { getApiList, getAriticleTyoe } from '../../api/two'
 export default {
-  data() {
+  data () {
     return {
-      linkList: [
-        {
-          linkName: '', // 站点名称
-          linkUrlL: '', // 站点链接
-          linkLogo: '', // 站点Logo
-          linkShow: '', // 展示地址
-          linkWay: '' // 联系方式
-        }
-      ], // 内容列表
+      state: '', // 标题框输入数据
+      ArrState: [], // 用来临时存放查找出来的数据
+      loading: false,
       house: {
-        linkName: '',
-        state: ''
+        name: '',
+        id: ''
       },
-      loading: false, // 加载小圆圈
+      tableData: [],
+      tableDatas: [],
+      multipleSelection: [],
       currentPage: 1, // 初始页
-      pagesize: 5 //    每页的数据
+      pagesize: 10 //    每页的数据
     }
   },
-  mounted() {
-    this.getLink()
+  mounted () {
+    if (localStorage.getItem('getUseChange')) {
+      this.tableData = JSON.parse(localStorage.getItem('getUseChange'))
+      console.log(222, this.tableData)
+      this.tableDatas = this.tableData
+    } else {
+      this.$axios({
+        method: 'GET',
+        url: '/getUseChange',
+      }).then(res => {
+        console.log(111, res.data.data)
+        this.tableData = res.data.data
+        this.tableDatas = this.tableData
+        localStorage.setItem('getUseChange', JSON.stringify(this.tableData))
+      })
+    }
   },
   methods: {
-    // 获取表单内容数据
-    getLink() {
-      getLinkList()
-        .then((res) => {
-          console.log(res)
-          this.linkList = res.rows
-          // console.log(this.linkList)
-        })
-        .catch((err) => {})
-    },
-    // 表单提交
-    onSubmit() {
-      // console.log(this.house.type, this.house.state);
-      this.getSearchLink()
-    },
-    // 搜索获取表单的内容
-    getSearchLink() {
-      this.loading = true
-      const { linkName, state } = this.house
-      console.log(linkName)
-      const params = {
-        pageNum: 1,
-        pageSize: 20,
-        orderByColumn: 'create_time',
-        linkName: linkName,
-        state: state
-      }
-      getLinkList(params).then(res => {
-        console.log(res)
+    // onSubmit () {
+    //   this.tableDatas = []
+    // },
+    onSubmit () {
+      const name = this.house.name
+      const id = this.house.id
 
-        setTimeout(() => {
-          this.loading = false
-        }, 500)
-        this.linkList = res.rows
+      // 根据输入框中的条件进行过滤
+      this.tableDatas = this.tableData.filter(item => {
+        return item.id.includes(id) && item.name.includes(name)
       })
+      // this.house.name = ""
+      // this.house.id = ""
+      console.log(this.tableDatas)
     },
-    // 清除表单内容
-    onClear() {
-      this.house.type = ''
-      this.house.state = ''
+
+    deleteIt (index) {
+      this.tableData.splice(index, 1)
+      // 更新本地存储中的数据
+      localStorage.setItem('getUseChange', JSON.stringify(this.tableData))
     },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach((row) => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    handleSizeChange(val) {
+
+    handleSizeChange (val) {
       this.pagesize = val
       console.log(`每页 ${val} 条`)
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.currentPage = val
       console.log(`当前页: ${val}`)
     },
-    // 刷新页面
-    refreshData() {
-      // location.reload();
 
-      setTimeout(() => {
-        this.loading = true
-        setTimeout(() => {
-          this.getLink()
-          this.loading = false
-        }, 500)
-      }, 500)
-      console.log(1)
-    },
-    // 清除表单内容
-    onClear() {
-      this.refreshData()
-    }
   }
+  // computed: {
+  //   tableDatas () {
+  //     if (this.house.name === "" && this.house.id === "") {
+  //       return this.tableData
+  //     } else {
+  //       const name = this.house.name
+  //       const id = this.house.id
+
+  //       return this.tableData.filter(item => {
+  //         // 根据输入框中的值进行过滤条件判断
+  //         return (!name || item.name.includes(name)) && (!id || item.id.includes(id))
+  //       })
+  //     }
+  //   }
+  // }
 }
 </script>
 
 <style lang="scss" scoped>
 * {
-  /* box-sizing: border-box; */
   margin: 0;
   padding: 0;
 }
+
+.button {
+  height: 30px;
+  width: 70px;
+}
+
+.el-table {
+  padding: 20px 20px 0 20px;
+  width: 100%;
+}
+
 .app-main {
   width: 100%;
   position: relative;
   overflow: hidden;
-}
-.app-container {
-  padding: 8px;
   background-color: #ffffff;
 }
+
+.app-container {
+  padding: 8px;
+  // background-color: #ffffff;
+  position: relative;
+}
+
 .el-row {
   margin-bottom: 5px;
   position: relative;
@@ -269,38 +180,29 @@ export default {
   height: 33px;
   background-color: #ffffff;
 }
-.el-table {
-  font-size: 12px;
-  width: 100%;
-  height: 800px;
-  background-color: #ffffff;
-}
+
+
+
 .pagination {
   padding: 5px;
   width: 100%;
-  height: 25px;
+  height: 35px;
   margin-bottom: 5px;
   margin-top: 5px;
   background-color: #ffffff;
-  position: relative;
+  position: fixed;
+  bottom: 0;
+  left: -5px;
+  padding-right: 50px;
+  border-top: solid 2px #e6ebf5;
+  z-index: 1;
 }
+
 .pagin {
   position: absolute;
-  right: 0;
+  right: 20px;
 }
-.demo-right {
-  float: right;
-}
-.a1 {
-  border-radius: 50%;
-}
-.a2 {
-  border-radius: 50%;
-}
-.el-table {
-  text-align: center;
-  font-size: 12px;
-}
+
 
 .flex {
   display: flex;
@@ -312,21 +214,20 @@ export default {
   border-color: #1890ff;
 }
 
-.input {
-  width: 140px;
-}
-
 .app-main {
   min-height: calc(100vh - 84px);
   width: 100%;
   position: relative;
   overflow: hidden;
-  .app-container {
+
+  .app-container-header {
     padding: 8px;
+
     .nav {
       margin-left: -5px;
       margin-right: -5px;
       margin-bottom: 5px;
+
       .right {
         float: right;
       }

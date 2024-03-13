@@ -8,354 +8,253 @@
           <div class="nav">
             <div class="right flex">
               <!-- 表单 -->
-              <el-form
-                :inline="true"
-                :model="house"
-                class="demo-form-inline form"
-                size="mini"
-              >
-                <el-form-item label="类型">
-                  <el-select
-                    v-model="house.type"
-                    clearable
-                    placeholder="请选择类型"
-                    size="mini"
-                  >
-                    <el-option
-                      v-for="item in articleType "
-                      :key="item.value"
-                      :label="item.dictLabel"
-                      :value="item.dictValue"
-                    />
-                  </el-select>
+              <el-form :inline="true" :model="house" class="demo-form-inline form" size="medium">
+                <el-form-item label="名字">
+                  <el-input v-model="house.name" placeholder="请输入名字" :trigger-on-focus="false" size="medium" />
                 </el-form-item>
-                <el-form-item label="标题">
-                  <el-input
-                    v-model="house.state"
-
-                    placeholder="请输入内容"
-                    :trigger-on-focus="false"
-                    size="mini"
-                  />
+                <el-form-item label="学号">
+                  <el-input v-model="house.id" placeholder="请输入学号" :trigger-on-focus="false" size="medium" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button
-                    type="primary"
-                    icon="el-icon-search"
-                    @click="onSubmit"
-                  >搜索</el-button>
-                  <el-button
-                    icon="el-icon-refresh"
-                    @click="onClear"
-                  >重置</el-button>
+                  <el-button type="primary" icon="el-icon-search" class="button" @click="onSubmit">搜索</el-button>
                 </el-form-item>
               </el-form>
-              <div class="another">
-                <el-row>
-                  <el-button
-                    icon="el-icon-search"
-                    size="mini"
-                    circle
-                  />
-                  <el-button
-                    icon="el-icon-refresh"
-                    size="mini"
-                    circle
-                    @click="refreshData"
-                  />
-                </el-row>
-              </div>
             </div>
           </div>
         </div>
         <!-- 内容 -->
         <div class="el-table">
-          <el-table
-            ref="multipleTable"
-            v-loading="loading"
-            :data="
-              tableData.slice(
-                (currentPage - 1) * pagesize,
-                currentPage * pagesize
-              )
-            "
-            tooltip-effect="dark"
-            style="width: 100%"
-            height=""
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column type="selection" width="55" />
-            <el-table-column
-              class=".el-table"
-              prop="index"
-              label="#"
-              width="50"
-              type="index"
-              align="center"
-            />
-            <el-table-column
-              class=".el-table"
-              prop="articleType"
-              label="类型"
-              width="100"
-              align="center"
-            />
-            <el-table-column
-              class=".el-table"
-              prop="smallTitle"
-              label="标题"
-              width="200"
-              align="center"
-            />
-            <el-table-column
-              class=".el-table"
-              prop="bigTitle"
-              label="简介"
-              width="586"
-              header-align="center"
-              align="center"
-            />
-            <el-table-column
-              class=".el-table"
-              prop="faceUrl"
-              label="封面图"
-              width="100"
-              align="center"
-              show-overflow-tooltip
-            >
+          <el-table :data="tableDatas" style="width: 100%" :full-width="true" border>
+            <el-table-column prop="name" label="姓名" width="180">
+            </el-table-column>
+            <el-table-column prop="phone" label="手机号" width="220">
+            </el-table-column>
+            <el-table-column prop="id" label="学号" width="220">
+            </el-table-column>
+            <el-table-column prop="age" label="年纪" width="120">
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" width="240">
+            </el-table-column>
+            <el-table-column label="是否禁止发布" width="120">
               <template slot-scope="scope">
-                <div class="big_img">
-                  <el-image
-                    style="width: 30px; height: 30px"
-                    :src="scope.row.faceUrl.startsWith('https://sourcebyte.vip') ? scope.row.faceUrl : 'https://sourcebyte.vip' + scope.row.faceUrl"
-                    lazy
-                    class="img"
-                  >
-                    <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline" />
-                    </div>
-                  </el-image>
-                </div>
+                <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949"
+                  @change="updateStatus(scope.row)">
+                </el-switch>
               </template>
             </el-table-column>
-            <el-table-column
-              class=".el-table"
-              prop="articleSource"
-              label="来源"
-              width="100"
-              align="center"
-            />
-            <el-table-column
-              class=".el-table"
-              prop="remark"
-              label="备注"
-              width="100"
-              align="center"
-            />
-            <el-table-column prop="articleType" label="操作" align="center" />
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button @click="deleteIt(scope.$index)" type="danger" size="medium"
+                  class="delete-button">删除</el-button>
+                <el-button @click="changeIt(scope.row)" type="primary" size="medium"
+                  class="delete-button">编辑</el-button>
+              </template>
+            </el-table-column>
+
           </el-table>
-          <!-- <el-table-column prop="articleType" label="类型" width="120"></el-table-column> -->
-          <!-- <el-table-column prop="address" label="地址" show-overflow-tooltip> -->
-          <!-- </el-table-column> -->
         </div>
         <!-- 分页器 -->
         <div class="pagination">
           <div class="pagin">
             <div class="block">
-              <el-pagination
-                :current-page="currentPage"
-                :page-sizes="[10, 20, 50, 100]"
-                :page-size="pagesize"
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="tableData.length"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-              />
+              <el-pagination :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize"
+                background layout="total, sizes, prev, pager, next, jumper" :total="tableData.length"
+                @size-change="handleSizeChange" @current-change="handleCurrentChange" />
             </div>
           </div>
         </div>
-        <div class="el-dialog" />
       </div>
+
     </div>
+    <el-dialog :visible="dialogVisible" @close="closeDialog" title="编辑个人信息">
+      <el-form :model="editFormData" label-width="100px">
+        <el-form-item label="姓名">
+          <el-input v-model="editFormData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="年龄">
+          <el-input v-model="editFormData.age"></el-input>
+        </el-form-item>
+        <el-form-item label="学号">
+          <el-input v-model="editFormData.id"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="editFormData.phone"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeDialog" class="delete-button">取消</el-button>
+        <el-button type="primary" @click="saveChanges" class="delete-button">保存</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getApiList, getAriticleTyoe } from '../../api/two'
 export default {
-  data() {
+  data () {
     return {
       state: '', // 标题框输入数据
       ArrState: [], // 用来临时存放查找出来的数据
       loading: false,
       house: {
-        type: '',
-        state: ''
+        name: '',
+        id: ''
       },
-      articleType: [],
-      formInline: {
-        user: '',
-        region: ''
-      },
-      tableData: [
-        {
-          articleType: '',
-          smallTitle: '',
-          bigTitle: '',
-          faceUrl: '',
-          articleSource: '',
-          remark: ''
-        }
-      ],
+      tableData: [],
+      tableDatas: [],
       multipleSelection: [],
       currentPage: 1, // 初始页
-      pagesize: 10 //    每页的数据
+      pagesize: 10, //    每页的数据
+      dialogVisible: false,
+      editFormData: []
     }
   },
-  mounted() {
-    this.getList()
-    this.getTyoe()
+  mounted () {
+    // var storage = window.localStorage
+    // storage.clear()
+    if (localStorage.getItem('getUseStudent')) {
+      this.tableData = JSON.parse(localStorage.getItem('getUseStudent'))
+      console.log(222, this.tableData)
+      this.tableDatas = this.tableData
+    } else {
+      this.$axios({
+        method: 'GET',
+        url: '/getUseStudent',
+      }).then(res => {
+        console.log(111, res.data.data)
+        this.tableData = res.data.data
+        this.tableDatas = this.tableData
+        localStorage.setItem('getUseStudent', JSON.stringify(this.tableData))
+      })
+    }
+
+
   },
   methods: {
-    // 表单提交
-    onSubmit() {
-      console.log(this.house.type, this.house.state)
-    },
-    // 清除表单内容
-    onClear() {
-      this.refreshData()
-    },
-    // 模糊查询
+    // onSubmit () {
+    //   this.tableDatas = []
+    // },
 
-    onSubmit() {
-      console.log(this.house.type)
-      console.log(this.house.state)
-      console.log('submit!')
-      if (this.house.state !== '' && this.house.type !== '') {
-        setTimeout(() => {
-          this.tableData.forEach((item) => {
-            // console.log(item)
-            if (item.smallTitle.indexOf(this.house.state) > -1 | item.articleType.indexOf(this.house.type) > -1) {
-              console.log(item)
-              console.log(1)
-              this.ArrState.push(item)
-              this.tableData = this.ArrState
-            }
-            // else{
-            //   this.tableData=[]
-            // }
-          })
-          this.house.state = ''
-        },)
-      } else if (this.house.state !== '') {
-        setTimeout(() => {
-          this.tableData.forEach((item) => {
-            // console.log(item)
-            if (item.smallTitle.indexOf(this.house.state) > -1) {
-              console.log(item)
-              console.log(2)
-              this.ArrState.push(item)
-              this.tableData = this.ArrState
-            }
-            // else{
-            //   this.tableData=[]
-            // }
-          })
-          this.house.state = ''
-        },)
-      } else if (this.house.type !== '') {
-        console.log(3)
+    // 提交搜索
+    onSubmit () {
+      const name = this.house.name
+      const id = this.house.id
 
-        this.tableData.forEach((item) => {
-          // console.log(item)
-          if (item.articleType.indexOf(this.house.type) > -1) {
-            console.log(item)
-            console.log(3)
-            this.ArrState.push(item)
-            console.log(this.ArrState)
-            this.tableData = this.ArrState
-          }
-          // else{
-          //   this.tableData=[]
-          // }
-        })
-
-        if (this.ArrState.length === 0) {
-          console.log(4)
-          this.tableData = []
-        }
-      } else {
-        this.tableData = []
-      }
-    },
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach((row) => {
-          this.$refs.multipleTable.toggleRowSelection(row)
-        })
-      } else {
-        this.$refs.multipleTable.clearSelection()
-      }
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val
-    },
-    // 获取文章内容
-    getList() {
-      getApiList()
-        .then((res) => {
-          // console.log(res);
-          // console.log(res.rows);
-          this.tableData = res.rows
-        })
-        .catch((err) => {})
-      console.log(123)
-    },
-    // 获取文章类型数据
-    getTyoe() {
-      getAriticleTyoe().then((res) => {
-        console.log(res)
-        this.articleType = res.data
-        console.log(this.articleType)
+      // 根据输入框中的条件进行过滤
+      this.tableDatas = this.tableData.filter(item => {
+        return item.id.includes(id) && item.name.includes(name)
       })
-        .catch((err) => {})
+      // this.house.name = ""
+      // this.house.id = ""
+      console.log(this.tableDatas)
     },
-    handleSizeChange(val) {
+    // 更新状态
+    updateStatus (row) {
+      // 将更新后的数据存储到 localStorage 中
+      const data = JSON.parse(localStorage.getItem('getUseStudent'))
+      const index = data.findIndex(item => item.id === row.id)
+      data[index].status = row.status
+
+      localStorage.setItem('getUseStudent', JSON.stringify(data))
+
+      this.tableData = JSON.parse(localStorage.getItem('getUseStudent'))
+      this.tableDatas = this.tableData
+      console.log(this.tableDatas)
+    },
+    // 删除当前条
+    deleteIt (index) {
+      this.tableData.splice(index, 1)
+      // 更新本地存储中的数据
+      localStorage.setItem('getUseStudent', JSON.stringify(this.tableData))
+    },
+    // 修改当前条
+    changeIt (row) {
+      this.editFormData = Object.assign({}, row)
+      this.dialogVisible = true
+    },
+    // 取消修改
+    closeDialog () {
+      this.dialogVisible = false
+    },
+    // 成功修改
+    saveChanges () {
+      const index = this.tableDatas.findIndex(item => item.id === this.editFormData.id)
+      if (index !== -1) {
+        this.tableDatas[index] = Object.assign({}, this.editFormData)
+        this.tableData = this.tableDatas
+        console.log(this.tableData)
+
+        // 将更新后的tableData保存到localStorage
+        localStorage.setItem('getUseStudent', JSON.stringify(this.tableData))
+      }
+      this.dialogVisible = false
+      if (localStorage.getItem('getUseStudent')) {
+        this.tableData = JSON.parse(localStorage.getItem('getUseStudent'))
+        console.log(222, this.tableData)
+        this.tableDatas = this.tableData
+      } else {
+        this.$axios({
+          method: 'GET',
+          url: '/getUseStudent',
+        }).then(res => {
+          console.log(111, res.data.data)
+          this.tableData = res.data.data
+          this.tableDatas = this.tableData
+          localStorage.setItem('getUseStudent', JSON.stringify(this.tableData))
+        })
+      }
+    },
+
+
+    handleSizeChange (val) {
       this.pagesize = val
       console.log(`每页 ${val} 条`)
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.currentPage = val
       console.log(`当前页: ${val}`)
     },
-    // 刷新页面
-    refreshData() {
-      // location.reload();
-      this.ArrState = []
-      setTimeout(() => {
-        this.loading = true
-        setTimeout(() => {
-          this.getList()
-          this.loading = false
-        }, 500)
-      }, 500)
-      console.log(1)
-    }
-    // 获取类型内容
 
   }
+  // computed: {
+  //   tableDatas () {
+  //     if (this.house.name === "" && this.house.id === "") {
+  //       return this.tableData
+  //     } else {
+  //       const name = this.house.name
+  //       const id = this.house.id
+
+  //       return this.tableData.filter(item => {
+  //         // 根据输入框中的值进行过滤条件判断
+  //         return (!name || item.name.includes(name)) && (!id || item.id.includes(id))
+  //       })
+  //     }
+  //   }
+  // }
 }
 </script>
 
 <style lang="scss" scoped>
-.ic-font {
-  font-size: 12px;
-}
 * {
-  /* box-sizing: border-box; */
   margin: 0;
   padding: 0;
+}
+
+
+.button {
+  height: 32px;
+  width: 70px;
+}
+
+.delete-button {
+  padding: 10px;
+}
+
+.el-table {
+  padding: 20px 20px 0 20px;
+  width: 100%;
 }
 
 .app-main {
@@ -364,11 +263,13 @@ export default {
   overflow: hidden;
   background-color: #ffffff;
 }
+
 .app-container {
   padding: 8px;
   // background-color: #ffffff;
   position: relative;
 }
+
 .el-row {
   margin-bottom: 5px;
   position: relative;
@@ -376,41 +277,33 @@ export default {
   height: 33px;
   background-color: #ffffff;
 }
-.el-table {
-  font-size: 12px;
-  width: 100%;
-  background-color:#ffffff;
-}
+
+
+
 .pagination {
   padding: 5px;
   width: 100%;
   height: 35px;
   margin-bottom: 5px;
   margin-top: 5px;
-  background-color:#ffffff;
+  padding-top: 10px;
+  background-color: #ffffff;
   position: fixed;
-  bottom: 0;
+  bottom: 10px;
   left: -5px;
+  padding-right: 50px;
   border-top: solid 2px #e6ebf5;
   z-index: 1;
 }
+
 .pagin {
   position: absolute;
-  right: 0;
+  right: 20px;
 }
-.demo-right {
-  float: right;
-}
-.a1 {
-  border-radius: 50%;
-}
-.a2 {
-  border-radius: 50%;
-}
-.el-table {
-  text-align: center;
-  font-size: 12px;
-}
+
+
+
+
 
 .flex {
   display: flex;
@@ -427,17 +320,20 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+
   .app-container-header {
-    padding: 8px;
+    padding: 20px;
+    padding-right: 30px;
+
     .nav {
       margin-left: -5px;
       margin-right: -5px;
       margin-bottom: 5px;
+
       .right {
         float: right;
       }
     }
   }
 }
-
 </style>

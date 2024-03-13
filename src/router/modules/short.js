@@ -9,9 +9,9 @@ const shortRouter = {
   path: '/goods',
   component: Layout,
   redirect: '/goods/goods.vue',
-  name: '回收商城',
+  name: '订单管理',
   meta: {
-    title: '回收商城',
+    title: '订单管理',
     icon: 'skill'
   },
   children: [
@@ -39,7 +39,7 @@ const shortRouter = {
       path: 'orders',
       name: 'orders',
       component: orders,
-      meta: { title: '订单信息', icon: 'skill' }
+      meta: { title: '发布订阅', icon: 'skill' }
     },
 
   ]

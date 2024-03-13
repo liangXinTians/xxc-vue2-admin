@@ -19,7 +19,11 @@ import api from './api' // 接口api
 import moment from 'moment'
 import print from 'vue-print-nb'
 import * as echarts from 'echarts'
-
+import mockdata from './mock'
+import qs from 'qs'
+import axios from 'axios'
+Vue.prototype.qs = qs
+Vue.prototype.$axios = axios
 Vue.use(print) // 注册打印插件
 Vue.use(VueClipboard)
 // 全局方法挂载

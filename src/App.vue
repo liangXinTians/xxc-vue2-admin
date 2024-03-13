@@ -8,43 +8,41 @@
 <script>
 export default {
   name: 'App',
-  data() {
+  data () {
     return {
       isLoading: true,
-      isRouterAlive: true
+      isRouterAlive: true,
+      userId: 666,
+      token: '',
     }
   },
   computed: {
-    ENV() {
+    ENV () {
       return process.env.VUE_APP_ENV
     }
   },
   watch: {
-    $route(to, from) {
+    $route (to, from) {
       // 判断展示router-view 还是 #container
       this.isLoading = false
     }
   },
-  mounted() {
+
+  mounted () {
     // 关闭浏览器窗口的时候清空浏览器缓存在localStorage的数据
-    window.onbeforeunload = function(e) {
-      var storage = window.localStorage
-      storage.clear()
-    }
+    // window.onbeforeunload = function (e) {
+    //   var storage = window.localStorage
+    //   storage.clear()
+    // }
+
+
   },
-  provide() {
+  provide () {
     return {
       reload: this.reload
     }
   },
-  methods: {
-    reload() {
-      this.isRouterAlive = false
-      this.$nextTick(() => {
-        this.isRouterAlive = true
-      })
-    }
-  }
+
 }
 </script>
 <style lang="scss">
@@ -52,6 +50,7 @@ body {
   background-color: #f6f6f6 !important;
   overflow: hidden;
 }
+
 #app {
   display: flex;
   flex-direction: column;
@@ -61,6 +60,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   overflow: hidden;
+
   .env_tag {
     position: absolute;
     z-index: 901;
